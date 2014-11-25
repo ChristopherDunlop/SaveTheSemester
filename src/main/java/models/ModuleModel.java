@@ -11,6 +11,9 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -26,7 +29,7 @@ public class ModuleModel {
 
     }
     
-    public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate) {
+    public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate) throws ParseException {
                 
         Session session = cluster.connect("savethesemester");
         
@@ -34,13 +37,18 @@ public class ModuleModel {
         if (moduleExists(moduleCode)) {
             return false;
         }
+        
+        // here the 2 date strings are parsed into the date format
+        Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+        Date eDate = new SimpleDateFormat("yyyy-MM-dd").parse(examDate);
+        
 
         PreparedStatement ps = session.prepare("insert into modules (moduleCode, moduleName, startDate, examDate) Values(?,?,?,?)");
 
         BoundStatement boundStatement = new BoundStatement(ps);
         session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
-                        moduleCode, moduleName, startDate, examDate));
+                        moduleCode, moduleName, sDate, eDate));
         return true;
     }  
 
