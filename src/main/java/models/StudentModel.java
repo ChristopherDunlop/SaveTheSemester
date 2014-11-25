@@ -16,6 +16,8 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import java.util.Set;
+import stores.Student;
 
 /**
  *
@@ -25,6 +27,39 @@ public class StudentModel {
     Cluster cluster;
     public StudentModel(){
         
+    }
+    
+    public Student getStudent(String user){
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement ps = session.prepare("SELECT username, firstname, lastname, modules FROM students WHERE username = ?");
+        BoundStatement boundStatement = new BoundStatement(ps);
+        ResultSet rs = null;
+        rs = session.execute(boundStatement.bind(user));
+        session.close();
+        
+        Student student = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No students returned for username: " + user);
+            return null;
+        }
+        else {
+            for (Row row : rs) {
+                student = new Student();
+                
+                String username = row.getString("username");
+                String firstname = row.getString("firstname");
+                String lastname = row.getString("lastname");
+                Set<String> modules = row.getSet("modules", String.class);
+                
+                student.setUsername(username);
+                student.setFirstName(firstname);
+                student.setLastName(lastname);
+                student.setModules(modules);
+            }
+        }
+        
+        return student;
     }
     
     public boolean RegisterStudent(String username, String Password, String name, String surname){
@@ -102,7 +137,4 @@ public class StudentModel {
         	return false;
         }
     }
-        
-    
-       
 }
