@@ -65,11 +65,11 @@ public class Register extends HttpServlet {
         StudentModel st = new StudentModel();
         st.setCluster(cluster);
         st.RegisterStudent(username, password, name, surname);
-        //boolean studentExists = st.existingStudent(username);
+        boolean studentExists = st.existingStudent(username);
         
-        response.sendRedirect("/SaveTheSemester");
+        //response.sendRedirect("/SaveTheSemester");
         
-      /* if (studentExists == true)
+       if (studentExists == true)
         {
         	st.RegisterStudent(username, password, name, surname);
         	response.sendRedirect("/SaveTheSemester");
@@ -77,7 +77,7 @@ public class Register extends HttpServlet {
         else
         {
         	response.sendRedirect("/SaveTheSemester");
-        }  */
+        }  
     }
     
     private void error(String fault, HttpServletResponse response) throws ServletException, IOException
