@@ -12,6 +12,7 @@
         <title>SaveTheSemester</title>
     </head>
     <body>
-        <h1>Direct to login or register through this!</h1>
+        <h1><li><a href="/SaveTheSemester/Login">Login</a></li></h1>
+        <h1><li><a href="/SaveTheSemester/Register">Register</a></li></h1>
     </body>
 </html>
