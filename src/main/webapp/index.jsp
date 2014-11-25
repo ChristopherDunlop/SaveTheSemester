@@ -14,6 +14,6 @@
     </head>
     <body>
         <h1><li><a href="/SaveTheSemester/Login">Login</a></li></h1>
-        <h1><li><a href="/SaveTheSemester/Register">Register</a></li></h1>
+        <h1><li><a href="Register.jsp">Register</a></li></h1>
     </body>
 </html>
