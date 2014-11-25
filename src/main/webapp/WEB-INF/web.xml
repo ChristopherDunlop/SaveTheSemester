@@ -4,17 +4,9 @@
         <servlet-name>logIn</servlet-name>
         <servlet-class>servlets.Login</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>ExamPlanner</servlet-name>
-        <servlet-class>servlets.ExamPlanner</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>logIn</servlet-name>
         <url-pattern>/logIn</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ExamPlanner</servlet-name>
-        <url-pattern>/ExamPlanner/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

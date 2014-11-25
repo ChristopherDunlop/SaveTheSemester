@@ -24,22 +24,59 @@ import lib.CassandraHosts;
 import stores.Student;
 
 
+import java.util.Set;
+import stores.Student;
+
+
 /**
  *
  * @author Administrator
  */
 public class StudentModel {
     Cluster cluster;
+    
     public StudentModel(){
         
     }
     
- 
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
+    }
     
+    public Student getStudent(String user){
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement ps = session.prepare("SELECT username, firstname, lastname, modules FROM students WHERE username = ?");
+        BoundStatement boundStatement = new BoundStatement(ps);
+        ResultSet rs = null;
+        rs = session.execute(boundStatement.bind(user));
+        session.close();
+        
+        Student student = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No students returned for username: " + user);
+            return null;
+        }
+        else {
+            for (Row row : rs) {
+                student = new Student();
+                
+                String username = row.getString("username");
+                String firstname = row.getString("firstname");
+                String lastname = row.getString("lastname");
+                Set<String> modules = row.getSet("modules", String.class);
+                
+                student.setUsername(username);
+                student.setFirstName(firstname);
+                student.setLastName(lastname);
+                student.setModules(modules);
+            }
+        }
+        
+        return student;
+    }
     
-    
-    
-    public boolean RegisterStudent(String username, String Password, String name, String surname){
+ public boolean RegisterStudent(String username, String Password, String name, String surname){
         AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
         String EncodedPassword=null;
         try {
@@ -92,12 +129,12 @@ public class StudentModel {
         }
     return false;  
     }
-   
+
        
     public boolean existingStudent(String username)
     {
     	Session session = cluster.connect("savethesemester");
-    	PreparedStatement ps = session.prepare("select username from students where  login=?");
+    	PreparedStatement ps = session.prepare("select username from students where  username=?");
     	ResultSet rs = null;
     	BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
@@ -112,6 +149,7 @@ public class StudentModel {
         	return false;
         }
     }
+
         
        public java.util.LinkedList<Student> getStudentInfo(String user) {
       
@@ -133,23 +171,16 @@ public class StudentModel {
                 String username = row.getString("username");
                 String firstName = row.getString ("firstname");
                 String lastName = row.getString ("lastname");
-                //modules.add(row.getString ("modules"));
+                modules = row.getSet("modules", String.class);
+                
                 student.setUsername(username);
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
-               // student.setModules (modules);
+               student.setModules (modules);
                 studentinfo.push(student);
             }
         }
        
         return studentinfo;
     }
-    
-         public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
-    }
-    
-    
-    
-       
 }
