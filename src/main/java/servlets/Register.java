@@ -32,15 +32,7 @@ public class Register extends HttpServlet {
         // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster();
     }
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username=request.getParameter("username");
@@ -70,21 +62,22 @@ public class Register extends HttpServlet {
             return;
         }
         
-        StudentModel us = new StudentModel();
-        us.setCluster(cluster);
-        //us.RegisterUser(username, password, name, surname, email, bio);
-        boolean studentExists = us.existingStudent(username);
+        StudentModel st = new StudentModel();
+        st.setCluster(cluster);
+        st.RegisterStudent(username, password, name, surname);
+        //boolean studentExists = st.existingStudent(username);
         
+        response.sendRedirect("/SaveTheSemester");
         
-       if (studentExists == true)
+      /* if (studentExists == true)
         {
-        	us.RegisterStudent(username, password, name, surname);
+        	st.RegisterStudent(username, password, name, surname);
         	response.sendRedirect("/SaveTheSemester");
         }
         else
         {
         	response.sendRedirect("/SaveTheSemester");
-        }  
+        }  */
     }
     
     private void error(String fault, HttpServletResponse response) throws ServletException, IOException

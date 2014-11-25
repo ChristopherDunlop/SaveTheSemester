@@ -58,7 +58,7 @@ public class StudentModel {
             return false;
         }
         Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select password from students where username=?");
+        PreparedStatement ps = session.prepare("select password from students where login=?");
         System.out.println("This is your user: " + username);
         System.out.println("This is your password: " + Password);
         System.out.println("This is your encoded password: " + EncodedPassword);
@@ -87,7 +87,7 @@ public class StudentModel {
     public boolean existingStudent(String username)
     {
     	Session session = cluster.connect("savethesemester");
-    	PreparedStatement ps = session.prepare("select username from students where username =?");
+    	PreparedStatement ps = session.prepare("select username from students where  login=?");
     	ResultSet rs = null;
     	BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
