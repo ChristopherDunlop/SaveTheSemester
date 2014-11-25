@@ -8,12 +8,7 @@ package models;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-
 import lib.AeSimpleSHA1;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
 
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
@@ -21,15 +16,14 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.eaio.uuid.UUID;
 
 /**
  *
  * @author Administrator
  */
-public class Student {
+public class StudentModel {
     Cluster cluster;
-    public Student(){
+    public StudentModel(){
         
     }
     

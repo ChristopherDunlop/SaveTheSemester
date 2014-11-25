@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import lib.CassandraHosts;
-import models.Student;
+import models.StudentModel;
 import stores.LoggedIn;
 
 
@@ -93,7 +93,7 @@ public class LogIn extends HttpServlet {
 		        	        }
 		            
         
-        Student us = new Student();
+        StudentModel us = new StudentModel();
         us.setCluster(cluster);
         boolean isValid=us.IsValidStudent(username, password);
         HttpSession session=request.getSession();

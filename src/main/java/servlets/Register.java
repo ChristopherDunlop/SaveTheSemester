@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lib.CassandraHosts;
-import models.Student;
+import models.StudentModel;
 
 import com.datastax.driver.core.Cluster;
 import javax.servlet.ServletConfig;
@@ -70,7 +70,7 @@ public class Register extends HttpServlet {
             return;
         }
         
-        Student us = new Student();
+        StudentModel us = new StudentModel();
         us.setCluster(cluster);
         //us.RegisterUser(username, password, name, surname, email, bio);
         boolean studentExists = us.existingStudent(username);
