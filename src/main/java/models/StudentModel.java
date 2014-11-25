@@ -25,8 +25,13 @@ import stores.Student;
  */
 public class StudentModel {
     Cluster cluster;
+    
     public StudentModel(){
         
+    }
+    
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
     }
     
     public Student getStudent(String user){
@@ -114,9 +119,6 @@ public class StudentModel {
             }
         }
     return false;  
-    }
-       public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
     }
        
     public boolean existingStudent(String username)

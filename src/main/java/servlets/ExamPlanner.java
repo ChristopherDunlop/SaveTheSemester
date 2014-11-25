@@ -7,18 +7,25 @@ package servlets;
 
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.Set;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lib.CassandraHosts;
+import lib.Convertors;
+import models.StudentModel;
+import stores.Student;
 
 /**
  *
  * @author Tom
  */
+@WebServlet(name = "ExamPlanner", urlPatterns = {"/ExamPlanner/*"})
 public class ExamPlanner extends HttpServlet {
     
     private Cluster cluster;
@@ -43,7 +50,24 @@ public class ExamPlanner extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String args[] = Convertors.SplitRequestPath(request);
+        System.out.println("Arg 2: " + args[2]);
         
+        StudentModel sm = new StudentModel();
+        sm.setCluster(cluster);
+        Student student = sm.getStudent(args[2]);
+        Set<String> modules = student.getModules();
+        Iterator<String> iterator = modules.iterator();
+        
+        while(iterator.hasNext()){
+            
+        }
+        
+        
+        request.setAttribute("Student", student);
+        
+        RequestDispatcher rd = request.getRequestDispatcher("/ExamPlanner.jsp");
+        rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
