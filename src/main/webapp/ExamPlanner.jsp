@@ -1,7 +1,7 @@
 <%-- 
-    Document   : index
-    Created on : 24-Nov-2014, 23:12:12
-    Author     : Christopher
+    Document   : ExamPlanner
+    Created on : 25-Nov-2014, 15:28:52
+    Author     : Tom
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -9,9 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>SaveTheSemester</title>
+        <title>JSP Page</title>
     </head>
     <body>
-        <h1>Direct to login or register through this!</h1>
+        <h1>Hello World!</h1>
     </body>
 </html>
