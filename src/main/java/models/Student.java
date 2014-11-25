@@ -43,7 +43,7 @@ public class Student {
             return false;
         }
         Session session = cluster.connect("instagrim");        
-        PreparedStatement ps = session.prepare("insert into studentprofiles (login,password,first_name,last_name,email,bio) Values(?,?,?,?)");
+        PreparedStatement ps = session.prepare("insert into studentprofiles (login,password,first_name,last_name) Values(?,?,?,?)");
        
         BoundStatement boundStatement = new BoundStatement(ps);
         session.execute( // this is where the query is executed
