@@ -27,9 +27,9 @@ import com.eaio.uuid.UUID;
  *
  * @author Administrator
  */
-public class Student {
+public class StudentModel {
     Cluster cluster;
-    public Student(){
+    public StudentModel(){
         
     }
     
