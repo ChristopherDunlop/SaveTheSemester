@@ -10,6 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>SaveTheSemester</title>
+        <h1>SaveTheSemester</h1>
     </head>
     <body>
         <h1><li><a href="/SaveTheSemester/Login">Login</a></li></h1>

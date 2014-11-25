@@ -22,7 +22,7 @@ import lib.CassandraHosts;
  */
 
 @WebServlet(name = "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
+public class LogIn extends HttpServlet {
 
         Cluster cluster=null;
         
