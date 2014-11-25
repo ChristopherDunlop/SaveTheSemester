@@ -12,6 +12,8 @@
         <title>SaveTheSemester</title>
     </head>
     <body>
-        <h1>Direct to login or register through this!</h1>
+        <h1>Save The Semester</h1>
+        <h2><li><a href="/SaveTheSemester/Login">Login</a></li></h2>
+        <h3><li><a href="Register.jsp">Register</a></li></h3>
     </body>
 </html>
