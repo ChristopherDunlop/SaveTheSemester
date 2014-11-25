@@ -26,7 +26,7 @@ public static void SetUpKeySpaces(Cluster c) {
         try {
             String createKeyspace ="CREATE KEYSPACE IF NOT EXISTS savethesemester WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
 
-            String createFileTable = "CREATE TYPE IF NOT EXISTS savethesemester.file("
+            String createFileType = "CREATE TYPE IF NOT EXISTS savethesemester.file("
                     + " FileID UUID,"
                     + " FileName text,"
                     + " FileType text,"
@@ -65,19 +65,19 @@ public static void SetUpKeySpaces(Cluster c) {
                         statement);
                 ResultSet rs = session
                         .execute(boundStatement);
-                System.out.println("created STS ");
+                System.out.println("created STS");
             } catch (Exception et) {
                 System.out.println("Can't create STS " + et);
             }
 
             //now add some column families 
-            System.out.println("" + createFileTable);
+            System.out.println("" + createFileType);
 
             try {
-                SimpleStatement cqlQuery = new SimpleStatement(createFileTable);
+                SimpleStatement cqlQuery = new SimpleStatement(createFileType);
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create FILE table " + et);
+                System.out.println("Can't create FILE type " + et);
             }
             System.out.println("" + createModulesTable);
 
