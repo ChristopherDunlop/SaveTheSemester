@@ -93,7 +93,7 @@ public class Student {
     public boolean existingStudent(String username)
     {
     	Session session = cluster.connect("instagrim");
-    	PreparedStatement ps = session.prepare("select login from userprofiles where login =?");
+    	PreparedStatement ps = session.prepare("select login from studentprofiles where login =?");
     	ResultSet rs = null;
     	BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
