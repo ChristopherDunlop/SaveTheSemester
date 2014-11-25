@@ -13,6 +13,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lib.Convertors;
+import models.StudentModel;
+import com.datastax.driver.core.Cluster;
+import javax.servlet.ServletConfig;
+import lib.CassandraHosts;
+import stores.Student;
 
 /**
  *
@@ -20,8 +26,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/Profile/*"})
 public class studentProfile extends HttpServlet {
-
-    /**
+    private Cluster cluster; 
+    
+     public void init(ServletConfig config) throws ServletException 
+    {
+        // TODO Auto-generated method stub
+        cluster = CassandraHosts.getCluster();
+    }
+    
+     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
@@ -47,10 +60,24 @@ public class studentProfile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
-        rd.forward(request, response);
+        
+        String args[] = Convertors.SplitRequestPath(request);
+        String user = args[2];
+        
+        
+        getStudentProfile(user, request, response);
     }
-
+    
+     private void getStudentProfile(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       StudentModel student = new StudentModel();
+       student.setCluster(cluster);
+       java.util.LinkedList<Student> studentInfo = student.getStudentInfo(user);
+       System.out.println("USER:" + user); 
+       RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
+       request.setAttribute("studentInfo", studentInfo);
+       rd.forward(request, response);
+    }
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *

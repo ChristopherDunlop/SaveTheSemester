@@ -16,6 +16,13 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import java.util.HashSet;
+import java.util.Set;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import lib.CassandraHosts;
+import stores.Student;
+
 
 /**
  *
@@ -26,6 +33,11 @@ public class StudentModel {
     public StudentModel(){
         
     }
+    
+ 
+    
+    
+    
     
     public boolean RegisterStudent(String username, String Password, String name, String surname){
         AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
@@ -58,7 +70,7 @@ public class StudentModel {
             return false;
         }
         Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select password from students where login=?");
+        PreparedStatement ps = session.prepare("select password from students where username=?");
         System.out.println("This is your user: " + username);
         System.out.println("This is your password: " + Password);
         System.out.println("This is your encoded password: " + EncodedPassword);
@@ -80,9 +92,7 @@ public class StudentModel {
         }
     return false;  
     }
-       public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
-    }
+   
        
     public boolean existingStudent(String username)
     {
@@ -103,6 +113,43 @@ public class StudentModel {
         }
     }
         
+       public java.util.LinkedList<Student> getStudentInfo(String user) {
+      
+       Session session = cluster.connect("savethesemester");
+       java.util.LinkedList<Student> studentinfo = new java.util.LinkedList<>();
+       Set <String> modules = new HashSet<>();
+       ResultSet rs;
+       PreparedStatement ps = session.prepare("select username, firstname, lastname, modules from students where username = ?");
+       System.out.println("got into method just about to execute statement!!!!!!!!!!!!!!!!!!!!");
+       rs = null;
+       BoundStatement boundStatement = new BoundStatement(ps);
+       rs = session.execute(boundStatement.bind(user));
+       if (rs.isExhausted()) {
+            System.out.println("No user found");
+            return null;
+        } else {
+            for (Row row : rs) {
+                Student student = new Student();
+                String username = row.getString("username");
+                String firstName = row.getString ("firstname");
+                String lastName = row.getString ("lastname");
+                //modules.add(row.getString ("modules"));
+                student.setUsername(username);
+                student.setFirstName(firstName);
+                student.setLastName(lastName);
+               // student.setModules (modules);
+                studentinfo.push(student);
+            }
+        }
+       
+        return studentinfo;
+    }
+    
+         public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
+    }
+    
+    
     
        
 }

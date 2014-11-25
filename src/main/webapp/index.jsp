@@ -12,14 +12,10 @@
         <title>SaveTheSemester</title>
     </head>
     <body>
-<<<<<<< HEAD
+        
         <h1><li><a href="/SaveTheSemester/Login">Login</a></li></h1>
         <h1><li><a href="Register.jsp">Register</a></li></h1>
          <h1><li><a href="/SaveTheSemester/Profile/*">Student Profile</a></li></h1>
-=======
-        <h1>Save The Semester</h1>
-        <h2><li><a href="/SaveTheSemester/Login">Login</a></li></h2>
-        <h3><li><a href="Register.jsp">Register</a></li></h3>
->>>>>>> origin/master
+
     </body>
 </html>
