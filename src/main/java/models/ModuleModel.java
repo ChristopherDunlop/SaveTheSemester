@@ -30,8 +30,8 @@ public class ModuleModel {
                 
         Session session = cluster.connect("savethesemester");
         
-        // if statement checks if the username has been taken, in which case display error message
-        if (moduleExists(moduleName)) {
+        // if statement checks if the modulecode has been taken, in which case display error message
+        if (moduleExists(moduleCode)) {
             return false;
         }
 
@@ -45,27 +45,20 @@ public class ModuleModel {
     }  
 
     //this boolean method will check the if the module trying to be added already exists
-    private boolean moduleExists(String moduleName) {
+    private boolean moduleExists(String moduleCode) {
     
         Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select moduleName from module where moduleName =?");
+        PreparedStatement ps = session.prepare("select modulecode from modules where modulecode =?");
         BoundStatement boundState = new BoundStatement(ps);
         ResultSet rs = null;
-        rs = session.execute(boundState.bind(moduleName));
+        rs = session.execute(boundState.bind(moduleCode));
         if (rs.isExhausted()) {
-            System.out.println("This module already exists.");
+            System.out.println("This module doesn't exist.");
             return false;
         } else {
-            for (Row row : rs) {
-                String existingModule = row.getString("moduleName");// create variable existingModule and define as the moduleName string value
-                if (existingModule.compareTo(moduleName) == 0) // check if the existingModule matches the entered moduleName,
-                {
                     return true;
                 }
-            }
         }
-        return false;
-     }
 
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
