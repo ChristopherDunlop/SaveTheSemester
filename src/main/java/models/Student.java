@@ -42,13 +42,13 @@ public class Student {
             System.out.println("Can't check your password");
             return false;
         }
-        Session session = cluster.connect("instagrim");        
-        PreparedStatement ps = session.prepare("insert into studentprofiles (login,password,first_name,last_name) Values(?,?,?,?)");
+        Session session = cluster.connect("savethesemester");        
+        PreparedStatement ps = session.prepare("insert into students (username, firstname, lastname, password) Values(?,?,?,?)");
        
         BoundStatement boundStatement = new BoundStatement(ps);
         session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
-                        username,EncodedPassword,name,surname));
+                        username,name,surname,EncodedPassword));
         //We are assuming this always works.  Also a transaction would be good here !
        
         return true;
@@ -63,8 +63,8 @@ public class Student {
             System.out.println("Can't check your password");
             return false;
         }
-        Session session = cluster.connect("SaveTheSemester");
-        PreparedStatement ps = session.prepare("select password from studentprofiles where login=?");
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement ps = session.prepare("select password from students where username=?");
         System.out.println("This is your user: " + username);
         System.out.println("This is your password: " + Password);
         System.out.println("This is your encoded password: " + EncodedPassword);
@@ -92,8 +92,8 @@ public class Student {
        
     public boolean existingStudent(String username)
     {
-    	Session session = cluster.connect("instagrim");
-    	PreparedStatement ps = session.prepare("select login from studentprofiles where login =?");
+    	Session session = cluster.connect("savethesemester");
+    	PreparedStatement ps = session.prepare("select username from students where username =?");
     	ResultSet rs = null;
     	BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
