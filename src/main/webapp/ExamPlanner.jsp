@@ -22,7 +22,15 @@
         <% Set<Module> modules = (Set<Module>) request.getAttribute("modules"); %>
         
         <%
-            if (modules != null || !modules.isEmpty()){
+            if (modules == null){
+        %>      <p>No modules found</p>
+        <%
+            }
+            else if (modules.isEmpty()){
+        %>      <p>No modules found</p>
+        <%
+            }
+            else {
         %>
             <table border="1">
             <tr>
@@ -72,11 +80,6 @@
             }
         %>
             </table>
-        <% }
-            else {
-        %>      <p>No modules found</p>
-        <%
-            }
-        %>
+        <% } %>
     </body>
 </html>
