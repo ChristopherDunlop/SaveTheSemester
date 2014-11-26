@@ -4,6 +4,7 @@
     Author     : Tom
 --%>
 
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Set"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
@@ -31,6 +32,8 @@
                 <th>Days until exam</th>
                 <th>Num Files</th>
                 <th>Est Files/Day</th>
+                <th>Num File Pages</th>
+                <th>Est Pages/Day</th>
             </tr>
             
         <%
@@ -42,24 +45,32 @@
                 Calendar today = new GregorianCalendar();
                 Calendar exam = new GregorianCalendar();
                 exam.setTime(module.getExamDate());
+                
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE dd-MMM-yyyy");
+                String examDate = formatter.format(exam.getTime());
+                
                 final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
                 int diffInDays = (int) ((exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS);
+                
                 int numOfFiles = module.getNumOfFiles();
-                float numFilesPerDay = diffInDays / numOfFiles;
+                float numFilesPerDay = numOfFiles / diffInDays;
+                
+                int numOfFilePages = module.getNumFilePages();
+                float numFilePagesPerDay = numOfFilePages / diffInDays;
         %>
-            
                 <tr>
                     <td><%=module.getModuleCode()%></td>
                     <td><%=module.getModuleName()%></td>
-                    <td><%=module.getExamDate()%></td>
+                    <td><%=examDate%></td>
                     <td><%=diffInDays%></td>
                     <td><%=numOfFiles%></td>
                     <td><%=numFilesPerDay%></td>
+                    <td><%=numOfFilePages%></td>
+                    <td><%=numFilePagesPerDay%></td>
                 </tr>
         <%
             }
         %>
-            
             </table>
         <% }
             else {

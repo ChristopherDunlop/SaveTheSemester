@@ -47,6 +47,18 @@ public class Module {
     public int getNumOfFiles(){
         return files.size();
     }
+    
+    public int getNumFilePages(){
+        int numFilePages = 0;
+        
+        java.util.Iterator<ModuleFile> iterator = files.iterator();
+        while (iterator.hasNext()){
+            ModuleFile file = iterator.next();
+            numFilePages += file.getNumPages();
+        }
+        
+        return numFilePages;
+    }
 
     public Date getStartDate() {
         return startDate;
