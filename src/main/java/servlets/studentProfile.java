@@ -18,6 +18,8 @@ import models.StudentModel;
 import com.datastax.driver.core.Cluster;
 import javax.servlet.ServletConfig;
 import lib.CassandraHosts;
+import models.ModuleModel;
+import stores.Module;
 import stores.Student;
 
 /**
@@ -70,7 +72,9 @@ public class studentProfile extends HttpServlet {
     
      private void getStudentProfile(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
        StudentModel studentMod = new StudentModel();
+       ModuleModel moduleMod = new ModuleModel();
        studentMod.setCluster(cluster);
+       moduleMod.setCluster(cluster);
        Student student = studentMod.getStudentInfo(user);
        System.out.println("USER:" + user); 
        RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");

@@ -16,7 +16,7 @@
         </header>
         <nav>
             <ul>  
-                <li><a href="/SaveTheSemester/index">Home</a></li>
+                <li><a href="/SaveTheSemester/index.jsp">Home</a></li>
             </ul>
         </nav>
        
