@@ -151,22 +151,22 @@ public class StudentModel {
     }
 
         
-       public java.util.LinkedList<Student> getStudentInfo(String user) {
+       public Student getStudentInfo(String user) {
       
        Session session = cluster.connect("savethesemester");
-       java.util.LinkedList<Student> studentinfo = new java.util.LinkedList<>();
        Set <String> modules = new HashSet<>();
        ResultSet rs;
        PreparedStatement ps = session.prepare("select username, firstname, lastname, modules from students where username = ?");
        rs = null;
        BoundStatement boundStatement = new BoundStatement(ps);
        rs = session.execute(boundStatement.bind(user));
+       Student student = null;
        if (rs.isExhausted()) {
             System.out.println("No user found");
             return null;
         } else {
             for (Row row : rs) {
-                Student student = new Student();
+                
                 String username = row.getString("username");
                 String firstName = row.getString ("firstname");
                 String lastName = row.getString ("lastname");
@@ -176,10 +176,10 @@ public class StudentModel {
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
                 student.setModules (modules);
-                studentinfo.push(student);
+                
             }
         }
        
-        return studentinfo;
+        return student;
     }
 }
