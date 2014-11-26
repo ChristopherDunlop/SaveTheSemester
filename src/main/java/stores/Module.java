@@ -14,41 +14,49 @@ import java.util.Set;
  * @author Shaun Smith
  */
 public class Module {
-    String modulecode;
-    Date examdate = null;
-    String modulename = null;
+    String moduleCode = null;
+    String moduleName = null;
+    Set<ModuleFile> files = null;
+    Date startDate = null;
+    Date examDate = null;
 
-    public String getModulename() {
-        return modulename;
-    }
-
-    public void setModulename(String modulename) {
-        this.modulename = modulename;
-    }
-    Date startdate = null; 
-
-    public String getModulecode() {
-        return modulecode;
+    public String getModuleCode() {
+        return moduleCode;
     }
 
-    public void setModulecode(String modulecode) {
-        this.modulecode = modulecode;
+    public void setModuleCode(String moduleCode) {
+        this.moduleCode = moduleCode;
     }
 
-    public Date getExamdate() {
-        return examdate;
+    public String getModuleName() {
+        return moduleName;
     }
 
-    public void setExamdate(Date examdate) {
-        this.examdate = examdate;
-    }
-    
-    public Date getStartdate() {
-        return startdate;
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
-    public void setStartdate(Date startdate) {
-        this.startdate = startdate;
+    public Set<ModuleFile> getFiles() {
+        return files;
     }
-   
+
+    public void setFiles(Set<ModuleFile> files) {
+        this.files = files;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(Date examDate) {
+        this.examDate = examDate;
+    }
 }
