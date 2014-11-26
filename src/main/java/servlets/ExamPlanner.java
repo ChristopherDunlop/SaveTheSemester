@@ -57,7 +57,7 @@ public class ExamPlanner extends HttpServlet {
         sm.setCluster(cluster);
         Student student = sm.getStudent(args[2]);
         Set<String> modules = student.getModules();
-        Iterator<String> iterator = modules.iterator();        
+        Iterator<String> iterator = modules.iterator();
         
         request.setAttribute("Student", student);
         
