@@ -109,7 +109,7 @@ public class LogIn extends HttpServlet {
 	    rd.forward(request,response);
             
         }else{
-            response.sendRedirect("/SaveTheSemester/Login.jsp");
+            response.sendRedirect("/SaveTheSemester/index.jsp");
         }
     }
     
