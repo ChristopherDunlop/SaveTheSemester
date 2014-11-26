@@ -9,7 +9,6 @@ import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,12 +42,10 @@ public class ModuleModel {
         Date eDate = new SimpleDateFormat("yyyy-MM-dd").parse(examDate);
         
 
-        PreparedStatement ps = session.prepare("insert into modules (moduleCode, moduleName, startDate, examDate) Values(?,?,?,?)");
-
+        PreparedStatement ps = session.prepare("insert into modules (moduleCode, moduleName, startDate, examDate, dateAdded) Values(?,?,?,?,?)");
         BoundStatement boundStatement = new BoundStatement(ps);
-        session.execute( // this is where the query is executed
-                boundStatement.bind( // here you are binding the 'boundStatement'
-                        moduleCode, moduleName, sDate, eDate));
+        Date dateAdded = new Date();
+        session.execute(boundStatement.bind(moduleCode, moduleName, sDate, eDate, dateAdded));
         return true;
     }  
 

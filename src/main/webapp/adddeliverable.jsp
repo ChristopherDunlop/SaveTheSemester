@@ -1,6 +1,6 @@
 <%-- 
-    Document   : addmodule
-    Created on : Nov 25, 2014, 4:30:12 PM
+    Document   : adddeliverable
+    Created on : Nov 26, 2014, 11:20:21 AM
     Author     : peterbennington
 --%>
 
@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Add Module</title>
+        <title>Add Deliverable</title>
     </head>
     <body>
-        <h1>Add Module</h1>
+        <h1>Add Deliverable</h1>
         
         <%  // prints a message to screen telling the user they have successfully added that module
             String moduleAdded = (String) request.getAttribute("moduleAdded");
@@ -22,16 +22,16 @@
             // prints an error message to screen telling the user the module with that module code already exists.
             String moduleExists = (String) request.getAttribute("moduleExists");
             if (moduleExists != null) {
-                out.println("<b>Error: </b>The module <b>" + moduleExists + "</b> already exists.");
+                out.println("The module <b>" + moduleExists + "</b> already exists.");
             }
             // prints an error message to screen telling the user they have not completed all fields
             String incompleteError = (String) request.getAttribute("incompleteError");
                 if (incompleteError != null) {
-                    out.println("<b>Error: </b>"+incompleteError);
+                    out.println(incompleteError);
                 }
         %>
         
-        <form method="POST"  action="addmodule">
+        <form method="POST"  action="adddeliverable">
                 <ul>
                     <li>Module Code: <input type="text" name="moduleCode"></li>
                     <li>Module Name: <input type="text" name="moduleName"></li>

@@ -2,7 +2,6 @@ package servlets;
 
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +46,7 @@ public class addmodule extends HttpServlet {
         String moduleName = request.getParameter("moduleName");
         String startDate = request.getParameter("startDate");
         String examDate = request.getParameter("examDate");
+        
 
         //below is an if statement that will check none of the fields have been left empty
         if (moduleCode.equals("") || moduleName.equals("") || startDate.equals("") || examDate.equals("")) {
@@ -78,7 +78,7 @@ public class addmodule extends HttpServlet {
 
     private void incompleteError(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        String incompleteError = "Error: Not all fields have been completed. Please answer all fields before clicking \"Add Module\"";
+        String incompleteError = "Not all fields have been completed. Please answer all fields before clicking <b>Add Module</b>";
         RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
         request.setAttribute("incompleteError",incompleteError); // display confirmation message that module was added
         rd.forward(request, response);
