@@ -7,6 +7,7 @@ package servlets;
 
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import javax.servlet.RequestDispatcher;
@@ -18,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lib.CassandraHosts;
 import lib.Convertors;
+import models.ModuleModel;
 import models.StudentModel;
+import stores.Module;
 import stores.Student;
 
 /**
@@ -51,15 +54,27 @@ public class ExamPlanner extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String args[] = Convertors.SplitRequestPath(request);
-        System.out.println("Arg 2: " + args[2]);
         
         StudentModel sm = new StudentModel();
         sm.setCluster(cluster);
-        Student student = sm.getStudent(args[2]);
-        Set<String> modules = student.getModules();
-        Iterator<String> iterator = modules.iterator();
+        Student student = sm.getStudentInfo(args[2]);
         
-        request.setAttribute("Student", student);
+        if (student != null){
+            Set<String> moduleCodes = student.getModules();
+            Iterator<String> iterator = moduleCodes.iterator();
+            
+            ModuleModel mm = new ModuleModel();
+            mm.setCluster(cluster);
+            
+            Set<Module> modules = new HashSet<>();
+            
+            while (iterator.hasNext()){
+                Module currModule = mm.getModule(iterator.next());
+                modules.add(currModule);
+            }
+            
+            request.setAttribute("modules", modules);
+        }
         
         RequestDispatcher rd = request.getRequestDispatcher("/ExamPlanner.jsp");
         rd.forward(request, response);

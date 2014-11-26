@@ -9,12 +9,18 @@ import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.UDTValue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
-import lib.Convertors;
+import stores.Module;
+import stores.ModuleFile;
 
 
 /**
@@ -28,6 +34,56 @@ public class ModuleModel {
 
     public ModuleModel() {
 
+    }
+    
+    public Module getModule(String moduleCode){
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psModules = session.prepare("select modulename, files, startdate, examdate from modules where modulecode = ?");
+        BoundStatement bsModules = new BoundStatement(psModules);
+        ResultSet rs = session.execute(bsModules.bind(moduleCode));
+        
+        Module module = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No module found for module code: " + moduleCode);
+            return null;
+        }
+        else {
+            for (Row row : rs){
+                module = new Module();
+                
+                module.setModuleCode(moduleCode);
+                module.setModuleName(row.getString("modulename"));
+                module.setStartDate(row.getDate("startdate"));
+                module.setExamDate(row.getDate("examdate"));
+                
+                Set<UDTValue> files = row.getSet("files", UDTValue.class);
+                Iterator<UDTValue> iterator = files.iterator();
+                
+                Set<ModuleFile> moduleFiles = new HashSet<>();
+
+                while (iterator.hasNext()){
+                    ModuleFile moduleFile = new ModuleFile();
+                    
+                    UDTValue file = iterator.next();
+                    UUID fileID = file.getUUID("fileid");
+                    String fileName = file.getString("filename");
+                    String fileType = file.getString("filetype");
+                    int numPages = file.getInt("numpages");
+                    
+                    moduleFile.setFileID(fileID);
+                    moduleFile.setFileName(fileName);
+                    moduleFile.setFileType(fileType);
+                    moduleFile.setNumPages(numPages);
+                    
+                    moduleFiles.add(moduleFile);
+                }
+                
+                module.setFiles(moduleFiles);
+            }
+        }
+        
+        return module;
     }
     
     public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate) throws ParseException {         
