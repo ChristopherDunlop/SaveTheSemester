@@ -69,12 +69,12 @@ public class studentProfile extends HttpServlet {
     }
     
      private void getStudentProfile(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       StudentModel student = new StudentModel();
-       student.setCluster(cluster);
-       java.util.LinkedList<Student> studentInfo = student.getStudentInfo(user);
+       StudentModel studentMod = new StudentModel();
+       studentMod.setCluster(cluster);
+       Student student = studentMod.getStudentInfo(user);
        System.out.println("USER:" + user); 
        RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
-       request.setAttribute("studentInfo", studentInfo);
+       request.setAttribute("studentInfo", student);
        rd.forward(request, response);
     }
     
