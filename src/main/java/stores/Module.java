@@ -43,6 +43,10 @@ public class Module {
     public void setFiles(Set<ModuleFile> files) {
         this.files = files;
     }
+    
+    public int getNumOfFiles(){
+        return files.size();
+    }
 
     public Date getStartDate() {
         return startDate;

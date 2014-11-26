@@ -4,10 +4,11 @@
     Author     : Tom
 --%>
 
+<%@page import="java.util.Set"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
 <%@page import="stores.Module"%>
 <%@page import="java.util.Iterator"%>
-<%@page import="java.util.Set"%>
-<%@page import="stores.Student"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -24,17 +25,41 @@
         %>
             <table border="1">
             <tr>
+                <th>Module Code</th>
+                <th>Module Name</th>
+                <th>Exam Date</th>
+                <th>Days until exam</th>
+                <th>Num Files</th>
+                <th>Est Files/Day</th>
+            </tr>
+            
         <%
             Iterator<Module> iterator = modules.iterator();
 
             while (iterator.hasNext()){
                 Module module = iterator.next();
-                %>
-                <td><%=module.getModuleName()%></td>
-                <%
+                
+                Calendar today = new GregorianCalendar();
+                Calendar exam = new GregorianCalendar();
+                exam.setTime(module.getExamDate());
+                final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+                int diffInDays = (int) ((exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS);
+                int numOfFiles = module.getNumOfFiles();
+                float numFilesPerDay = diffInDays / numOfFiles;
+        %>
+            
+                <tr>
+                    <td><%=module.getModuleCode()%></td>
+                    <td><%=module.getModuleName()%></td>
+                    <td><%=module.getExamDate()%></td>
+                    <td><%=diffInDays%></td>
+                    <td><%=numOfFiles%></td>
+                    <td><%=numFilesPerDay%></td>
+                </tr>
+        <%
             }
         %>
-            </tr>
+            
             </table>
         <% }
             else {
