@@ -105,7 +105,7 @@ public class LogIn extends HttpServlet {
             
             session.setAttribute("LoggedIn", lg);
             System.out.println("Session in servlet "+session);
-            RequestDispatcher rd=request.getRequestDispatcher("/SaveTheSemester/index.jsp");
+            RequestDispatcher rd=request.getRequestDispatcher("/index.jsp");
 	    rd.forward(request,response);
             
         }else{
