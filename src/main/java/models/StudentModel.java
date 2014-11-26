@@ -16,6 +16,7 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.ServletConfig;
@@ -79,20 +80,21 @@ public class StudentModel {
  public boolean RegisterStudent(String username, String Password, String name, String surname){
         AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
         String EncodedPassword=null;
-        try {
+        try 
+        {
             EncodedPassword= sha1handler.SHA1(Password);
-        }catch (UnsupportedEncodingException | NoSuchAlgorithmException et){
+        }
+        catch (UnsupportedEncodingException | NoSuchAlgorithmException et)
+        {
             System.out.println("Can't check your password");
             return false;
         }
         Session session = cluster.connect("savethesemester");        
-        PreparedStatement ps = session.prepare("insert into students (username, firstname, lastname, password) Values(?,?,?,?)");
+        PreparedStatement ps = session.prepare("insert into students (username, firstname, lastname, password, dateAdded) Values(?,?,?,?,?)");
        
         BoundStatement boundStatement = new BoundStatement(ps);
-        session.execute( // this is where the query is executed
-                boundStatement.bind( // here you are binding the 'boundStatement'
-                        username,name,surname,EncodedPassword));
-        //We are assuming this always works.  Also a transaction would be good here !
+        Date dateAdded = new Date();
+        session.execute(boundStatement.bind(username,name,surname,EncodedPassword, dateAdded));
        
         return true;
     }
@@ -100,31 +102,34 @@ public class StudentModel {
     public boolean IsValidStudent(String username, String Password){
         AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
         String EncodedPassword=null;
-        try {
+        try 
+        {
             EncodedPassword= sha1handler.SHA1(Password);
-        }catch (UnsupportedEncodingException | NoSuchAlgorithmException et){
+        }
+        catch (UnsupportedEncodingException | NoSuchAlgorithmException et)
+        {
             System.out.println("Can't check your password");
             return false;
         }
         Session session = cluster.connect("savethesemester");
         PreparedStatement ps = session.prepare("select password from students where username=?");
-        System.out.println("This is your user: " + username);
-        System.out.println("This is your password: " + Password);
+        System.out.println("The Student is: " + username);
         System.out.println("This is your encoded password: " + EncodedPassword);
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
-        rs = session.execute( // this is where the query is executed
-                boundStatement.bind( // here you are binding the 'boundStatement'
-                        username));
-        if (rs.isExhausted()) {
+        rs = session.execute(boundStatement.bind(username));
+        if (rs.isExhausted()) 
+        {
             System.out.println("No student found!");
             return false;
-        } else {
-            for (Row row : rs) {
-               
+        } 
+        else 
+        {
+            for (Row row : rs) 
+            {   
                 String StoredPass = row.getString("password");
                 if (StoredPass.compareTo(EncodedPassword) == 0)
-                    return true;
+                return true;
             }
         }
     return false;  
@@ -137,10 +142,9 @@ public class StudentModel {
     	PreparedStatement ps = session.prepare("select username from students where  username=?");
     	ResultSet rs = null;
     	BoundStatement boundStatement = new BoundStatement(ps);
-        rs = session.execute( // this is where the query is executed
-                 boundStatement.bind( // here you are binding the 'boundStatement'
-                         username));
-        if (rs.isExhausted()) {
+        rs = session.execute(boundStatement.bind(username));
+        if (rs.isExhausted()) 
+        {
             System.out.println("No user found: " + username);
             return false;
         } else 
@@ -176,10 +180,8 @@ public class StudentModel {
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
                 student.setModules (modules);
-                
             }
         }
-       
         return student;
     }
 }
