@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import lib.Convertors;
 import models.StudentModel;
 import com.datastax.driver.core.Cluster;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import javax.servlet.ServletConfig;
 import lib.CassandraHosts;
 import models.ModuleModel;
@@ -59,6 +62,16 @@ public class studentProfile extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -72,17 +85,33 @@ public class studentProfile extends HttpServlet {
     
      private void getStudentProfile(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
        StudentModel studentMod = new StudentModel();
-       ModuleModel moduleMod = new ModuleModel();
        studentMod.setCluster(cluster);
-       moduleMod.setCluster(cluster);
        Student student = studentMod.getStudentInfo(user);
-       System.out.println("USER:" + user); 
+       Set<String> moduleIDs = student.getModules();
+      
        RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
        request.setAttribute("studentInfo", student);
-       rd.forward(request, response);
+       getModuleNames(moduleIDs, request, response);
     }
+     
+     private void getModuleNames(Set<String> moduleIDs, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+          ModuleModel moduleMod = new ModuleModel();
+          Set<String>modulenames = new HashSet<>();
+          moduleMod.setCluster(cluster);
+          Iterator <String> iterator = moduleIDs.iterator();
+          while(iterator.hasNext())
+          {
+            String currModule = iterator.next();
+            String modName = moduleMod.getModuleName(currModule);
+            modulenames.add(modName);
+          }
+          
+          RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
+          request.setAttribute("moduleName", modulenames);
+          rd.forward(request, response);
+      }
     
-    /**
+     /**
      * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request

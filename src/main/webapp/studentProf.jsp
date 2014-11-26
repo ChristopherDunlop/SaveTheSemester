@@ -20,7 +20,7 @@
         
        <% 
              Student studentInfo = (Student) request.getAttribute("studentInfo");
-             Module moduleName = (Module) request.getAttribute("moduleName");
+             Set<String> moduleName = (Set<String>) request.getAttribute("moduleName");
              if (studentInfo == null)
              {
         %>
@@ -31,11 +31,10 @@
              else
              {
                  Student student = (Student)studentInfo;
-                 Module module = (Module)moduleName;
+                 Set<String> moduleNames = (Set<String>)moduleName;
                  String username = student.getUsername();
                  String firstname = student.getFirstName();
                  String lastname = student.getLastName();
-                 String moduleNames = module.getModulename();
                  Set<String> modules = student.getModules();
                
                  
