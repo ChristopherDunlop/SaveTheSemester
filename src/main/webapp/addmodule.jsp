@@ -19,19 +19,24 @@
             if (moduleAdded != null) {
                 out.println("The module <b>" + moduleAdded + "</b> has been added.");
             }
-            // prints a message to screen telling the user they have successfully added that module
+            // prints an error message to screen telling the user the module with that module code already exists.
             String moduleExists = (String) request.getAttribute("moduleExists");
             if (moduleExists != null) {
                 out.println("The module <b>" + moduleExists + "</b> already exists.");
             }
+            // prints an error message to screen telling the user they have not completed all fields
+            String incompleteError = (String) request.getAttribute("incompleteError");
+                if (incompleteError != null) {
+                    out.println(incompleteError);
+                }
         %>
         
         <form method="POST"  action="addmodule">
                 <ul>
-                    <li>Module Code: <input type="text" name="moduleCode" required></li>
-                    <li>Module Name: <input type="text" name="moduleName" required></li>
-                    <li>Start Date: <input type="date" min="2014-09-01" name="startDate" required></li>
-                    <li>Exam Date: <input type="date" min="2014-12-01" name="examDate"required></li>
+                    <li>Module Code: <input type="text" name="moduleCode"></li>
+                    <li>Module Name: <input type="text" name="moduleName"></li>
+                    <li>Start Date: <input type="date" min="2014-09-01" name="startDate"></li>
+                    <li>Exam Date: <input type="date" min="2014-12-01" name="examDate"></li>
                 </ul>
                 <br/>
                 <input type="submit" value="Add Module"> 

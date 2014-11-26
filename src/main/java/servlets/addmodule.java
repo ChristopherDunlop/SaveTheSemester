@@ -3,6 +3,9 @@ package servlets;
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -55,25 +58,29 @@ public class addmodule extends HttpServlet {
             ModuleModel mod = new ModuleModel();
             mod.setCluster(cluster);
 
-            if (mod.addModule(moduleCode, moduleName, startDate, examDate)) {
-                RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
-                request.setAttribute("moduleAdded", moduleName); // display confirmation message that module was added
-                rd.forward(request, response);
-            } else {
-
-                RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
-                request.setAttribute("moduleExists", moduleName); // display error message that the module already exists, therefore not added
-                rd.forward(request, response);
+            try {
+                if (mod.addModule(moduleCode, moduleName, startDate, examDate)) {
+                    RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
+                    request.setAttribute("moduleAdded", moduleCode); // display confirmation message that module was added
+                    rd.forward(request, response);
+                } else {
+                    
+                    RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
+                    request.setAttribute("moduleExists", moduleCode); // display error message that the module already exists, therefore not added
+                    rd.forward(request, response);
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(addmodule.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         response.sendRedirect("/SaveTheSemester");
     }
 
-    private void incompleteError(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-         PrintWriter out = null;
-    	 out = new PrintWriter(response.getOutputStream());
-    	 out.println("<h1>You have made a mistake, please try again</h1>");
-    	 out.close();
+    private void incompleteError(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        String incompleteError = "Error: Not all fields have been completed. Please answer all fields before clicking \"Add Module\"";
+        RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
+        request.setAttribute("incompleteError",incompleteError); // display confirmation message that module was added
+        rd.forward(request, response);
     }
 }
