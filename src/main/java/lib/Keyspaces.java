@@ -62,7 +62,7 @@ public static void SetUpKeySpaces(Cluster c) {
                     + " DateAdded timestamp"
                     + ")";
             
-            String createStudentModuleDeliverablesTable = "CREATE TABLE IF NOT EXISTS studentModuleDeliverables ("
+            String createStudentModuleDeliverablesTable = "CREATE TABLE IF NOT EXISTS savethesemester.studentModuleDeliverables ("
                     + "	ModuleCode text,"
                     + "	Username text,"
                     + "	deliverableAdded timestamp,"
