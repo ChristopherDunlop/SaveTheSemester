@@ -158,7 +158,6 @@ public class StudentModel {
        Set <String> modules = new HashSet<>();
        ResultSet rs;
        PreparedStatement ps = session.prepare("select username, firstname, lastname, modules from students where username = ?");
-       System.out.println("got into method just about to execute statement!!!!!!!!!!!!!!!!!!!!");
        rs = null;
        BoundStatement boundStatement = new BoundStatement(ps);
        rs = session.execute(boundStatement.bind(user));
@@ -176,7 +175,7 @@ public class StudentModel {
                 student.setUsername(username);
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
-               student.setModules (modules);
+                student.setModules (modules);
                 studentinfo.push(student);
             }
         }

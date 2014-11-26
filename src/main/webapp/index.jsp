@@ -4,6 +4,7 @@
     Author     : Christopher
 --%>
 
+<%@page import="stores.LoggedIn"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -11,11 +12,30 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>SaveTheSemester</title>
     </head>
+    
     <body>
-        
-        <h1><li><a href="/SaveTheSemester/Login">Login</a></li></h1>
-        <h1><li><a href="Register.jsp">Register</a></li></h1>
-        <h1><li><a href="/SaveTheSemester/Profile/*">Student Profile</a></li></h1>
-        <h1><li><a href="addmodule.jsp">Add Module</a></li></h1>
-        
-
+    <%
+        LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+        if (lg != null){
+            if(lg. getloggedin())
+            {
+    %>
+    
+        <h1><a href="/SaveTheSemester/Login">Login</a></h1>
+        <h1><a href="Register.jsp">Register</a></h1>
+        <h1><a href="/SaveTheSemester/Profile/<%=lg.getUsername()%>">Student Profile</a></h1>
+        <h1><a href="addmodule.jsp">Add Module</a></h1>
+    
+    <%
+                       }
+                        }
+        else {
+    %>
+                <h1><a href="/SaveTheSemester/Login">Login</a></h1>
+                <h1><a href="Register.jsp">Register</a></h1>
+    
+    <%
+             }
+    %>
+    </body>
+</html>

@@ -32,12 +32,13 @@
                  String username = student.getUsername();
                  String firstname = student.getFirstName();
                  String lastname = student.getLastName();
-                 //Set<String> modules = student.getModules();
+                 Set<String> modules = student.getModules();
         %>
         
         <h1>Profile of: <%=username%></h1>
         <p>First Name: <%=firstname%></p>
         <p>Last Name: <%=lastname%></p>
+        <p>Modules: <%=modules%></p>
         
         <%  }
         %>
