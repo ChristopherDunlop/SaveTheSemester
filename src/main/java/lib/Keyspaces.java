@@ -57,8 +57,8 @@ public static void SetUpKeySpaces(Cluster c) {
                     + " ModuleCode text,"
                     + " Username text,"
                     + " DueDate timestamp,"
-                    + " PercentageWorth float,"
-                    + " PercentageAchieved float,"
+                    + " PercentageWorth double,"
+                    + " PercentageAchieved double,"
                     + " DateAdded timestamp"
                     + ")";
             
