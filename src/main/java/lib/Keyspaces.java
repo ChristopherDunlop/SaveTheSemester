@@ -38,7 +38,8 @@ public static void SetUpKeySpaces(Cluster c) {
                    + " ModuleName text,"
                    + " StartDate timestamp,"
                    + " ExamDate timestamp,"
-                   + " Files set<frozen<file>>"
+                   + " Files set<frozen<file>>,"
+                   + " DateAdded timestamp"
                    + ")";
 
             String createStudentsTable = "CREATE TABLE IF NOT EXISTS savethesemester.students("
@@ -46,16 +47,28 @@ public static void SetUpKeySpaces(Cluster c) {
                     + " Password varchar,"
                     + " FirstName text,"
                     + " LastName text,"
-                    + " Modules set<text>"
+                    + " Modules set<text>,"
+                    + " DateAdded timestamp"
                     + ")";
 
             String createDeliverablesTable = "CREATE TABLE IF NOT EXISTS savethesemester.deliverables("
                     + " DeliverableID UUID PRIMARY KEY,"
+                    + " DeliverableName text,"
                     + " ModuleCode text,"
                     + " Username text,"
+                    + " DueDate timestamp,"
                     + " PercentageWorth float,"
-                    + "PercentageAchieved float"
+                    + " PercentageAchieved float,"
+                    + " DateAdded timestamp"
                     + ")";
+            
+            String createStudentModuleDeliverablesTable = "CREATE TABLE IF NOT EXISTS studentModuleDeliverables ("
+                    + "	ModuleCode text,"
+                    + "	Username text,"
+                    + "	deliverableAdded timestamp,"
+                    + "	deliverableID UUID,"
+                    + "	PRIMARY KEY (ModuleCode, deliverableAdded, Username)"
+                    + ") WITH CLUSTERING ORDER BY (deliverableAdded DESC)";
             
             Session session = c.connect();
             try {
@@ -100,6 +113,13 @@ public static void SetUpKeySpaces(Cluster c) {
                 session.execute(cqlQuery);
             } catch (Exception et) {
                 System.out.println("Can't create DELIVERABLES table " + et);
+            }
+            System.out.println("" + createStudentModuleDeliverablesTable);
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(createStudentModuleDeliverablesTable);
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                System.out.println("Can't create STUDENT MODULE DELIVERABLES table " + et);
             }
             session.close();
 
