@@ -22,7 +22,7 @@
         <% Set<Module> modules = (Set<Module>) request.getAttribute("modules"); %>
         
         <%
-            if (modules != null){
+            if (modules != null || !modules.isEmpty()){
         %>
             <table border="1">
             <tr>
