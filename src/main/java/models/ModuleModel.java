@@ -23,6 +23,7 @@ import java.util.UUID;
 import stores.Module;
 import stores.ModuleFile;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  *
@@ -110,32 +111,71 @@ public class ModuleModel {
                 moduleFiles = new HashSet<>();
 
                 while (iterator.hasNext()){
-                    ModuleFile moduleFile = new ModuleFile();
-                    
-                    //UDTValue file = iterator.next();
                     Map.Entry file = (Map.Entry) iterator.next();
-                    UDTValue fileInfo = (UDTValue) file.getValue();
+                    UUID fileID = (UUID) file.getKey();
                     
-                    UUID fileID = (UUID) file.getKey();             
-                    String fileName = fileInfo.getString("filename");
-                    String fileType = fileInfo.getString("filetype");
-                    int numPages = fileInfo.getInt("numpages");
-                    boolean completed = fileInfo.getBool("completed");
-                    Date dateCompleted = fileInfo.getDate("datecompleted");
-                    
-                    moduleFile.setFileID(fileID);
-                    moduleFile.setFileName(fileName);
-                    moduleFile.setFileType(fileType);
-                    moduleFile.setNumPages(numPages);
-                    moduleFile.setCompleted(completed);
-                    moduleFile.setDateCompleted(dateCompleted);
-                    
+                    ModuleFile moduleFile = getModuleFile(user, moduleCode, fileID);                    
                     moduleFiles.add(moduleFile);
                 }
             }
         }
         
         return moduleFiles;
+    }
+    
+    public ModuleFile getModuleFile(String user, String moduleCode, UUID fileID){
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psModuleFile = session.prepare("select files from modules where username = ? AND modulecode = ?");
+        BoundStatement bsModuleFile = new BoundStatement(psModuleFile);
+        ResultSet rs = session.execute(bsModuleFile.bind(user, moduleCode));
+        
+        ModuleFile moduleFile = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No files found for " + user + " - " + moduleCode);
+            return null;
+        }
+        else {
+            Map<UUID, UDTValue> files = rs.one().getMap("files", UUID.class, UDTValue.class);
+            
+            if (files.containsKey(fileID)){
+                moduleFile = new ModuleFile();
+                
+                UDTValue fileInfo = (UDTValue) files.get(fileID);
+                String fileName = fileInfo.getString("filename");
+                String fileType = fileInfo.getString("filetype");
+                int numPages = fileInfo.getInt("numpages");
+                boolean completed = fileInfo.getBool("completed");
+                Date dateCompleted = fileInfo.getDate("datecompleted");
+                
+                moduleFile.setFileID(fileID);
+                moduleFile.setFileName(fileName);
+                moduleFile.setFileType(fileType);
+                moduleFile.setNumPages(numPages);
+                moduleFile.setCompleted(completed);
+                moduleFile.setDateCompleted(dateCompleted);
+            }
+        }
+        
+        return moduleFile;
+    }
+    
+    public void setFileComplete(UUID fileID, boolean completed, String username, String moduleCode){
+        ModuleFile moduleFile = getModuleFile(username, moduleCode, fileID);
+        
+        UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
+        Date date = new Date();
+        UDTValue file = fileUDT.newValue()
+                .setString("filename", moduleFile.getFileName())
+                .setString("filetype", moduleFile.getFileType())
+                .setInt("numpages", moduleFile.getNumPages())
+                .setBool("completed", completed)
+                .setDate("datecompleted", date);
+        
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement ps = session.prepare("update modules set files[?] = ? where username = ? and modulecode = ?");
+        BoundStatement bs = new BoundStatement(ps);
+        session.execute(bs.bind(fileID, file, username, moduleCode));
     }
     
     public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate, String username) throws ParseException {         

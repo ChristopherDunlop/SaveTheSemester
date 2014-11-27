@@ -87,11 +87,14 @@ public class ModuleFiles extends HttpServlet {
             throws ServletException, IOException {
         String args[] = Convertors.SplitRequestPath(request);
         java.util.UUID fileID = java.util.UUID.fromString(request.getParameter("fileID"));
+        String username = request.getParameter("username");
+        String moduleCode = request.getParameter("moduleCode");
         boolean completed = Boolean.parseBoolean(request.getParameter("completed"));
         
         ModuleModel mm = new ModuleModel();
         mm.setCluster(cluster);
-        //mm.setModuleFileCompleted(fileID, completed);
+        ModuleFile moduleFile = mm.getModuleFile(username, moduleCode, fileID);
+        mm.setFileComplete(fileID, completed, username, moduleCode);
         
         RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
         rd.forward(request, response);
