@@ -34,10 +34,10 @@
         %>
         
         <% if (lg != null && lg.getloggedin()) {%>
-        <form method="POST"  action="addmodule">
+        <form method="POST"  action="AddModule">
                 <ul>
-                    <li>Module Code: <input type="text" name="moduleCode"></li>
-                    <li>Module Name: <input type="text" name="moduleName"></li>
+                    <li>Module Code: <input type="text" name="moduleCode" placeholder="Module Code"></li>
+                    <li>Module Name: <input type="text" name="moduleName" placeholder="Module Name"></li>
                     <li>Start Date: <input type="date" min="2014-09-01" name="startDate"></li>
                     <li>Exam Date: <input type="date" min="2014-12-01" name="examDate"></li>
                 </ul>

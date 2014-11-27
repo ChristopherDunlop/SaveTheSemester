@@ -19,7 +19,7 @@ import models.ModuleModel;
  *
  * @author peterbennington
  */
-@WebServlet(name = "addmodule", urlPatterns = {"/addmodule"})
+@WebServlet(name = "AddModule", urlPatterns = {"/AddModule"})
 public class addmodule extends HttpServlet {
 
     Cluster cluster = null;
@@ -29,9 +29,23 @@ public class addmodule extends HttpServlet {
         
         cluster = CassandraHosts.getCluster();
     }
+    
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.sendRedirect("addmodule.jsp");
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -74,7 +88,7 @@ public class addmodule extends HttpServlet {
                 Logger.getLogger(addmodule.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        response.sendRedirect("/SaveTheSemester");
+        response.sendRedirect("/SaveTheSemester/index.jsp");
     }
 
     private void incompleteError(HttpServletRequest request, HttpServletResponse response)
