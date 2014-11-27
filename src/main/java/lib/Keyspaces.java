@@ -30,45 +30,41 @@ public static void SetUpKeySpaces(Cluster c) {
                     + " FileID UUID,"
                     + " FileName text,"
                     + " FileType text,"
-                    + " NumPages int"
+                    + " NumPages int,"
+                    + " Completed boolean,"
+                    + " DateCompleted timestamp"
                     + ")";
 
             String createModulesTable = "CREATE TABLE IF NOT EXISTS savethesemester.modules("
-                   + " ModuleCode text PRIMARY KEY,"
-                   + " ModuleName text,"
-                   + " StartDate timestamp,"
-                   + " ExamDate timestamp,"
-                   + " Files set<frozen<file>>,"
-                   + " DateAdded timestamp"
-                   + ")";
+                    + "	Username text,"
+                    + "	ModuleCode text,"
+                    + "	ModuleName text,"
+                    + "	StartDate timestamp,"
+                    + "	ExamDate timestamp,"
+                    + "	Files set<frozen<file>>,"
+                    + "	DateAdded timestamp,"
+                    + "	PRIMARY KEY (Username, ModuleCode)"
+                    + "	)";
 
             String createStudentsTable = "CREATE TABLE IF NOT EXISTS savethesemester.students("
                     + " Username text PRIMARY KEY,"
                     + " Password varchar,"
                     + " FirstName text,"
                     + " LastName text,"
-                    + " Modules set<text>,"
                     + " DateAdded timestamp"
                     + ")";
 
             String createDeliverablesTable = "CREATE TABLE IF NOT EXISTS savethesemester.deliverables("
-                    + " DeliverableID UUID PRIMARY KEY,"
+                    + " DeliverableID UUID,"
                     + " DeliverableName text,"
                     + " ModuleCode text,"
                     + " Username text,"
                     + " DueDate timestamp,"
                     + " PercentageWorth double,"
                     + " PercentageAchieved double,"
-                    + " DateAdded timestamp"
+                    + " DateAdded timestamp,"
+                    + " PRIMARY KEY (Username, ModuleCode, DeliverableID)"
                     + ")";
-            
-            String createStudentModuleDeliverablesTable = "CREATE TABLE IF NOT EXISTS savethesemester.studentModuleDeliverables ("
-                    + "	ModuleCode text,"
-                    + "	Username text,"
-                    + "	deliverableAdded timestamp,"
-                    + "	deliverableID UUID,"
-                    + "	PRIMARY KEY (ModuleCode, deliverableAdded, Username)"
-                    + ") WITH CLUSTERING ORDER BY (deliverableAdded DESC)";
             
             Session session = c.connect();
             try {
@@ -114,13 +110,7 @@ public static void SetUpKeySpaces(Cluster c) {
             } catch (Exception et) {
                 System.out.println("Can't create DELIVERABLES table " + et);
             }
-            System.out.println("" + createStudentModuleDeliverablesTable);
-            try {
-                SimpleStatement cqlQuery = new SimpleStatement(createStudentModuleDeliverablesTable);
-                session.execute(cqlQuery);
-            } catch (Exception et) {
-                System.out.println("Can't create STUDENT MODULE DELIVERABLES table " + et);
-            }
+            
             session.close();
 
         } catch (Exception et) {

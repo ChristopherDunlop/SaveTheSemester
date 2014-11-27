@@ -14,11 +14,20 @@ import java.util.Set;
  * @author Shaun Smith
  */
 public class Module {
+    String username = null;
     String moduleCode = null;
     String moduleName = null;
     Set<ModuleFile> files = null;
     Date startDate = null;
     Date examDate = null;
+    
+    public String getUsername() {
+        return moduleCode;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getModuleCode() {
         return moduleCode;

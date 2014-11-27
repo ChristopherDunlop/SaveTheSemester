@@ -15,7 +15,6 @@ public class Student {
     String username = null;
     String firstName = null;
     String lastName = null;
-    Set<String> modules = null;
 
     public String getUsername() {
         return username;
@@ -39,13 +38,5 @@ public class Student {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Set<String> getModules() {
-        return modules;
-    }
-
-    public void setModules(Set<String> modules) {
-        this.modules = modules;
     }
 }

@@ -5,6 +5,7 @@
  */
 package stores;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -16,6 +17,24 @@ public class ModuleFile {
     String fileName = null;
     String fileType = null;
     int numPages = 0;
+    boolean completed;
+    Date dateCompleted = null;
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public Date getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
 
     public UUID getFileID() {
         return fileID;
