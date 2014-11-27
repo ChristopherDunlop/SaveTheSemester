@@ -4,6 +4,7 @@
     Author     : peterbennington
 --%>
 
+<%@page import="stores.LoggedIn"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -29,8 +30,10 @@
                 if (incompleteError != null) {
                     out.println("<b>Error: </b>"+incompleteError);
                 }
+        LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");        
         %>
         
+        <% if (lg != null && lg.getloggedin()) {%>
         <form method="POST"  action="addmodule">
                 <ul>
                     <li>Module Code: <input type="text" name="moduleCode"></li>
@@ -39,7 +42,9 @@
                     <li>Exam Date: <input type="date" min="2014-12-01" name="examDate"></li>
                 </ul>
                 <br/>
+                <input type="hidden" value="<%=lg.getUsername()%>" name="username">
                 <input type="submit" value="Add Module"> 
         </form>
+        <%}%>        
     </body>
 </html>

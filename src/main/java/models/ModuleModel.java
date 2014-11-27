@@ -154,7 +154,7 @@ public class ModuleModel {
     private boolean moduleExists(String moduleCode) {
     
         Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select modulecode from modules where modulecode =?");
+        PreparedStatement ps = session.prepare("select modulecode from modules where modulecode =? ALLOW FILTERING");
         BoundStatement boundState = new BoundStatement(ps);
         ResultSet rs = null;
         rs = session.execute(boundState.bind(moduleCode));
