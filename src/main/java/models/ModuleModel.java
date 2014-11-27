@@ -175,10 +175,7 @@ public class ModuleModel {
 
         UUID uuid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
         UUID deliverableID = uuid.randomUUID();
-        // if statement checks if deliverableID has been taken, in which case display error message
-        if (deliverableExists(deliverableID)) {
-            return false;
-        }
+ 
         // here the 2 date strings are parsed into the date format
         Date dDate = new SimpleDateFormat("yyyy-MM-dd").parse(dueDate);
         PreparedStatement ps = session.prepare("insert into deliverables (deliverableID, moduleCode, deliverableName, dueDate, percentageWorth, percentageAchieved, dateAdded, username) Values(?,?,?,?,?,?,?,?)");
@@ -187,22 +184,6 @@ public class ModuleModel {
         session.execute(boundStatement.bind(deliverableID, moduleCode, deliverableName, dDate, perWorth, perAchieved, dateAdded, username));
         return true;
     }  
-
-    //this boolean method will check the if the module trying to be added already exists
-    private boolean deliverableExists(UUID deliverableID) {
-    
-        Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select deliverableid from deliverables where deliverableid =?");
-        BoundStatement boundState = new BoundStatement(ps);
-        ResultSet rs = null;
-        rs = session.execute(boundState.bind(deliverableID));
-        if (rs.isExhausted()) {
-            System.out.println("This deliverable doesn't exist.");
-            return false;
-        } else {
-                    return true;
-                }
-        }
        
         public boolean addFile(String fileName, String fileType, String numPages, String username ){
         Session session = cluster.connect("savethesemester");
