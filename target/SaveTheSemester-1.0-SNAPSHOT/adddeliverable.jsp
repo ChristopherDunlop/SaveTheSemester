@@ -34,13 +34,13 @@
         %>
         
         <% if (lg != null && lg.getloggedin()) {%>
-        <form method="POST"  action="adddeliverable">
+        <form method="POST"  action="AddDeliverable">
                 <ul>
-                    <li>Module Code: <input type="text" name="moduleCode"></li>
-                    <li>Deliverable Name: <input type="text" name="deliverableName"></li>
-                    <li>Due Date: <input type="date" min="2014-09-01" name="dueDate"></li>
-                    <li>Percentage Worth: <input type="text" name="percentageWorth" ></li>
-                    <li>Percentage Achieved: <input type="text" name="percentageAchieved"></li>
+                    <li>Module Code: <input type="text" name="moduleCode" placeholder="Module Code" required></li>
+                    <li>Deliverable Name: <input type="text" name="deliverableName" placeholder="Deliverable Name" required></li>
+                    <li>Due Date: <input type="date" min="2014-09-01" name="dueDate" required></li>
+                    <li>Percentage Worth: <input type="text" name="percentageWorth" placeholder="00.00" required> (Please enter a number e.g. 20.00)</li>
+                    <li>Percentage Achieved: <input type="text" name="percentageAchieved" placeholder="00.00" required> (If not yet marked, enter 0)</li>
                 </ul>
                 <br/>
                 <input type="hidden" value="<%=lg.getUsername()%>" name="username">
