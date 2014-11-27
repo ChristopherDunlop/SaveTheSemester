@@ -121,7 +121,7 @@ public class StudentModel {
        Session session = cluster.connect("savethesemester");
        
        ResultSet rs;
-       PreparedStatement ps = session.prepare("select username, firstname, lastname, modules from students where username = ?");
+       PreparedStatement ps = session.prepare("select username, firstname, lastname from students where username = ?");
        rs = null;
        BoundStatement boundStatement = new BoundStatement(ps);
        rs = session.execute(boundStatement.bind(user));
@@ -135,12 +135,10 @@ public class StudentModel {
                 String username = row.getString("username");
                 String firstName = row.getString ("firstname");
                 String lastName = row.getString ("lastname");
-                Set <String> modules = row.getSet("modules", String.class);
                 
                 student.setUsername(username);
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
-                student.setModules (modules);
             }
         }
         return student;

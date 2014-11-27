@@ -36,9 +36,31 @@ public class ModuleModel {
 
     }
     
+    public Set<Module> getStudentModules(String user){
+        Set<Module> studentModules = new HashSet();
+        
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psModules = session.prepare("select modulecode from modules where username = ?");
+        BoundStatement bsModules = new BoundStatement(psModules);
+        ResultSet rs = session.execute(bsModules.bind(user));
+        
+        if (rs.isExhausted()) {
+            System.out.println("No modules found for student: " + user);
+            return null;
+        }
+        else {
+            for (Row row : rs){
+                Module module = getModule(row.getString("modulecode"));
+                studentModules.add(module);
+            }
+        }
+        
+        return studentModules;
+    }
+    
     public Module getModule(String moduleCode){
         Session session = cluster.connect("savethesemester");
-        PreparedStatement psModules = session.prepare("select modulename, files, startdate, examdate from modules where modulecode = ?");
+        PreparedStatement psModules = session.prepare("select username, modulename, files, startdate, examdate from modules where modulecode = ? ALLOW FILTERING");
         BoundStatement bsModules = new BoundStatement(psModules);
         ResultSet rs = session.execute(bsModules.bind(moduleCode));
         
@@ -52,6 +74,7 @@ public class ModuleModel {
             for (Row row : rs){
                 module = new Module();
                 
+                module.setUsername(row.getString("username"));
                 module.setModuleCode(moduleCode);
                 module.setModuleName(row.getString("modulename"));
                 module.setStartDate(row.getDate("startdate"));
@@ -70,11 +93,15 @@ public class ModuleModel {
                     String fileName = file.getString("filename");
                     String fileType = file.getString("filetype");
                     int numPages = file.getInt("numpages");
+                    boolean completed = file.getBool("completed");
+                    Date dateCompleted = file.getDate("datecompleted");
                     
                     moduleFile.setFileID(fileID);
                     moduleFile.setFileName(fileName);
                     moduleFile.setFileType(fileType);
                     moduleFile.setNumPages(numPages);
+                    moduleFile.setCompleted(completed);
+                    moduleFile.setDateCompleted(dateCompleted);
                     
                     moduleFiles.add(moduleFile);
                 }

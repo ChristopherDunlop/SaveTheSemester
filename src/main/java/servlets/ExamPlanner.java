@@ -60,19 +60,9 @@ public class ExamPlanner extends HttpServlet {
         Student student = sm.getStudentInfo(args[2]);
         
         if (student != null){
-            Set<String> moduleCodes = student.getModules();
-            Iterator<String> iterator = moduleCodes.iterator();
-            
             ModuleModel mm = new ModuleModel();
             mm.setCluster(cluster);
-            
-            Set<Module> modules = new HashSet<>();
-            
-            while (iterator.hasNext()){
-                Module currModule = mm.getModule(iterator.next());
-                modules.add(currModule);
-            }
-            
+            Set<Module> modules = mm.getStudentModules(args[2]);
             request.setAttribute("modules", modules);
         }
         
