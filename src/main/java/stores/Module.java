@@ -8,7 +8,6 @@ package stores;
 import java.util.Date;
 import java.util.Set;
 
-
 /**
  *
  * @author Shaun Smith
@@ -71,6 +70,34 @@ public class Module {
     
     public int getNumOfFiles(){
         return files.size();
+    }
+    
+    public int getNumIncompleteFiles(){
+        int numFiles = 0;
+        
+        java.util.Iterator<ModuleFile> iterator = files.iterator();
+        while (iterator.hasNext()){
+            ModuleFile currFile = iterator.next();
+            if (!currFile.isCompleted()){
+                numFiles++;
+            }
+        }
+        
+        return numFiles;
+    }
+    
+    public int getNumIncompletePages(){
+        int numPages = 0;
+        
+        java.util.Iterator<ModuleFile> iterator = files.iterator();
+        while (iterator.hasNext()){
+            ModuleFile currFile = iterator.next();
+            if (!currFile.isCompleted()){
+                numPages += currFile.getNumPages();
+            }
+        }
+        
+        return numPages;
     }
     
     public int getNumFilePages(){
