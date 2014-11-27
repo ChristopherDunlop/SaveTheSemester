@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 lib\CassandraHosts.class
 servlets\ExamPlanner.class
 servlets\ModuleFiles.class
@@ -6,6 +5,7 @@ models\StudentModel.class
 models\ModuleModel.class
 servlets\LogIn.class
 servlets\studentProfile.class
+servlets\Progress.class
 lib\Keyspaces.class
 servlets\addmodule.class
 stores\Module.class
@@ -17,6 +17,3 @@ stores\ModuleFile.class
 lib\Convertors.class
 servlets\addFiles.class
 stores\Student.class
-=======
-lib\Convertors.class
->>>>>>> aca065ebae1a4fd22cdcb8d76023a8676493c077

@@ -64,7 +64,11 @@ public class Progress extends HttpServlet {
         HttpSession session = request.getSession(); 
         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
         
-        if(lg.getloggedin()){
+        if(lg == null){
+            RequestDispatcher rd = request.getRequestDispatcher("/Login");
+            rd.forward(request, response); 
+        }
+        else if(lg.getloggedin()){
             String username = lg.getUsername();
             ModuleModel mm = new ModuleModel();
             mm.setCluster(cluster);
