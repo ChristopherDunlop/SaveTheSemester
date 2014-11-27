@@ -48,15 +48,15 @@
             <td><%=moduleFile.getFileName()%></td>
             <td><%=moduleFile.getFileType()%></td>
             <td><%=moduleFile.getNumPages()%></td>
-            <td><%=moduleFile.isCompleted()%></td>
         <%
             if (moduleFile.isCompleted()){
         %>      
-            <td></td>
+            <td>Yes</td>
             <td><%=moduleFile.getDateCompleted()%></td>
         <%  }
             else {
-        %>      <td>N/A</td>
+        %>  <td>No</td>    
+            <td>N/A</td>
         <%  }
         %>
             </tr>
