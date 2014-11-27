@@ -139,6 +139,7 @@ public class StudentModel {
                 student.setUsername(username);
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
+                System.out.println("student info" + username + firstName + lastName);
             }
         }
         return student;

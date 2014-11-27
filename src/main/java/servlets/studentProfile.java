@@ -79,39 +79,30 @@ public class studentProfile extends HttpServlet {
         String args[] = Convertors.SplitRequestPath(request);
         String user = args[2];
         
-        
+        System.out.println(user);
         getStudentProfile(user, request, response);
     }
     
      private void getStudentProfile(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       StudentModel studentMod = new StudentModel();
-       studentMod.setCluster(cluster);
-       Student student = studentMod.getStudentInfo(user);
-       Set<String> moduleIDs = student.getModules();
-      
+       
+       StudentModel studMod = new StudentModel();
+       studMod.setCluster(cluster);
+       Student student = studMod.getStudentInfo(user);
        RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
-       request.setAttribute("studentInfo", student);
-       getModuleNames(moduleIDs, request, response);
+       request.setAttribute ("StudentProfile", student);
+       getModuleNames(user, request, response);
     }
      
-     private void getModuleNames(Set<String> moduleIDs, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     private void getModuleNames(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
           ModuleModel moduleMod = new ModuleModel();
-          Set<String>modulenames = new HashSet<>();
           moduleMod.setCluster(cluster);
-          Iterator <String> iterator = moduleIDs.iterator();
-          while(iterator.hasNext())
-          {
-            String currModule = iterator.next();
-            String modName = moduleMod.getModuleName(currModule);
-            modulenames.add(modName);
-          }
-          
-          RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");
-          request.setAttribute("moduleName", modulenames);
+          Set<Module> module = moduleMod.getStudentModules(user);
+          RequestDispatcher rd = request.getRequestDispatcher("/studentProf.jsp");          
+          request.setAttribute("modules", module);
           rd.forward(request, response);
       }
     
-     /**
+     /** 
      * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request

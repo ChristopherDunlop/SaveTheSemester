@@ -4,6 +4,7 @@
     Author     : Shaun Smith
 --%>
 
+<%@page import="java.util.Iterator"%>
 <%@page import="stores.Module"%>
 <%@page import="models.ModuleModel"%>
 <%@page import="java.util.Set"%>
@@ -19,9 +20,9 @@
         <h1>Study Planner Profile:</h1>
         
        <% 
-             Student studentInfo = (Student) request.getAttribute("studentInfo");
-             Set<String> moduleName = (Set<String>) request.getAttribute("moduleName");
-             if (studentInfo == null)
+             Student studentProfile = (Student) request.getAttribute("StudentProfile");
+             Set<Module> modules = (Set<Module>) request.getAttribute("modules");
+             if (studentProfile == null)
              {
         %>
         <p>No Profile Found</p>
@@ -30,23 +31,42 @@
         
              else
              {
-                 Student student = (Student)studentInfo;
-                 Set<String> moduleNames = (Set<String>)moduleName;
-                 String username = student.getUsername();
-                 String firstname = student.getFirstName();
-                 String lastname = student.getLastName();
-                 Set<String> modules = student.getModules();
-               
+                 String username = studentProfile.getUsername();
+                 String firstname = studentProfile.getFirstName();
+                 String lastname = studentProfile.getLastName();
                  
+                 Iterator<Module> iterator = modules.iterator();
+                 String mC= "";
+                 String mN= "";
                  
-        %>
+             
+             %>
+            <h1>Profile of: <%=username%></h1>
+            <p>First Name: <%=firstname%></p>
+            <p>Last Name: <%=lastname%></p>
+            <table>
+            <tr>
+            <th>Module Code</th>
+            <th>Module Name</th> 
+            </tr>
+             <%
+             while(iterator.hasNext()){
+                    Module m = iterator.next();
+                     mC = m.getModuleCode();
+                     mN = m.getModuleName();
+             %>
+            <tr>
+            <td><%=mC%></td>
+            <td><%=mN%></td> 
+            </tr>
+            
         
-        <h1>Profile of: <%=username%></h1>
-        <p>First Name: <%=firstname%></p>
-        <p>Last Name: <%=lastname%></p>
-        <p>Modules: <%=modules%><%=moduleNames%></p>
-        
-        <%  }
+            <%
+             }
+            %>
+             </table>
+        <%
+             }
         %>
         <a href="/savethesemester.index.jsp">Home</a>
     </body>
