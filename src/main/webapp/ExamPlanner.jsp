@@ -4,6 +4,7 @@
     Author     : Tom
 --%>
 
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Set"%>
 <%@page import="java.util.GregorianCalendar"%>
@@ -58,12 +59,12 @@
                 String examDate = formatter.format(exam.getTime());
                 
                 final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-                int diffInDays = (int) ((exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS);
+                float diffInDays = (int) ((exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS);
                 
-                int numOfFiles = module.getNumOfFiles();
+                float numOfFiles = (float) module.getNumOfFiles();
                 float numFilesPerDay = numOfFiles / diffInDays;
                 
-                int numOfFilePages = module.getNumFilePages();
+                float numOfFilePages = (float) module.getNumFilePages();
                 float numFilePagesPerDay = numOfFilePages / diffInDays;
         %>
                 <tr>
@@ -72,9 +73,9 @@
                     <td><%=examDate%></td>
                     <td><%=diffInDays%></td>
                     <td><%=numOfFiles%></td>
-                    <td><%=numFilesPerDay%></td>
+                    <td><%=String.format("%.2f", numFilesPerDay)%></td>
                     <td><%=numOfFilePages%></td>
-                    <td><%=numFilePagesPerDay%></td>
+                    <td><%=String.format("%.2f", numFilePagesPerDay)%></td>
                 </tr>
         <%
             }
