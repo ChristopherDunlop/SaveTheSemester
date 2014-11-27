@@ -76,6 +76,7 @@
                     <td><%=String.format("%.2f", numFilesPerDay)%></td>
                     <td><%=numOfFilePages%></td>
                     <td><%=String.format("%.2f", numFilePagesPerDay)%></td>
+                    <td><a href="/SaveTheSemester/ModuleFiles/<%=module.getUsername()%>/<%=module.getModuleCode()%>">View files</a></td>
                 </tr>
         <%
             }

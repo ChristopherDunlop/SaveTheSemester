@@ -20,9 +20,9 @@ public class Module {
     Set<ModuleFile> files = null;
     Date startDate = null;
     Date examDate = null;
-    
+
     public String getUsername() {
-        return moduleCode;
+        return username;
     }
 
     public void setUsername(String username) {
@@ -52,22 +52,6 @@ public class Module {
     public void setFiles(Set<ModuleFile> files) {
         this.files = files;
     }
-    
-    public int getNumOfFiles(){
-        return files.size();
-    }
-    
-    public int getNumFilePages(){
-        int numFilePages = 0;
-        
-        java.util.Iterator<ModuleFile> iterator = files.iterator();
-        while (iterator.hasNext()){
-            ModuleFile file = iterator.next();
-            numFilePages += file.getNumPages();
-        }
-        
-        return numFilePages;
-    }
 
     public Date getStartDate() {
         return startDate;
@@ -83,5 +67,21 @@ public class Module {
 
     public void setExamDate(Date examDate) {
         this.examDate = examDate;
+    }
+    
+    public int getNumOfFiles(){
+        return files.size();
+    }
+    
+    public int getNumFilePages(){
+        int numFilePages = 0;
+        
+        java.util.Iterator<ModuleFile> iterator = files.iterator();
+        while (iterator.hasNext()){
+            ModuleFile file = iterator.next();
+            numFilePages += file.getNumPages();
+        }
+        
+        return numFilePages;
     }
 }

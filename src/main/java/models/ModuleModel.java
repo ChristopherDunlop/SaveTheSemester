@@ -127,51 +127,8 @@ public class ModuleModel {
         Date dateAdded = new Date();
         session.execute(boundStatement.bind(moduleCode, moduleName, sDate, eDate, dateAdded, username));
         return true;
-    }  
-    
-     /**
-     *
-     * @param moduleID
-     * @return
-     */
-    public String getModuleName(String moduleID){
-        String modNames = " ";
-        Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select modulename from modules where modulecode = ?");
-        BoundStatement boundStatement = new BoundStatement(ps);
-        ResultSet rs = null;
-        rs = session.execute(boundStatement.bind(moduleID));
-        session.close();
-        if (rs.isExhausted()) {
-            System.out.println("No students returned for username: " + moduleID);
-            return null;
-        }
-        else {
-            for (Row row : rs) {
-            modNames = row.getString("modulename");
-               
-            }
-        }
-        
-     return modNames;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     //this boolean method will check the if the module trying to be added already exists
     private boolean moduleExists(String moduleCode) {
     
@@ -247,7 +204,7 @@ public class ModuleModel {
         return true;
     }
         
-         private boolean existingFile(UUID fileID) {
+    private boolean existingFile(UUID fileID) {
         Session session = cluster.connect("savethesemester");
         PreparedStatement ps = session.prepare("select fileid from file where fileid =?");
         
@@ -263,6 +220,4 @@ public class ModuleModel {
             return true;
         }
     }
-    
-
-    }
+}
