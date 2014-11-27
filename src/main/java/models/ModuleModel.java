@@ -113,7 +113,7 @@ public class ModuleModel {
         return module;
     }
     
-    public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate) throws ParseException {         
+    public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate, String username) throws ParseException {         
         Session session = cluster.connect("savethesemester");
         // if statement checks if the modulecode has been taken, in which case display error message
         if (moduleExists(moduleCode)) {
@@ -122,10 +122,10 @@ public class ModuleModel {
         // here the 2 date strings are parsed into the date format
         Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
         Date eDate = new SimpleDateFormat("yyyy-MM-dd").parse(examDate);
-        PreparedStatement ps = session.prepare("insert into modules (moduleCode, moduleName, startDate, examDate, dateAdded) Values(?,?,?,?,?)");
+        PreparedStatement ps = session.prepare("insert into modules (moduleCode, moduleName, startDate, examDate, dateAdded, username) Values(?,?,?,?,?,?)");
         BoundStatement boundStatement = new BoundStatement(ps);
         Date dateAdded = new Date();
-        session.execute(boundStatement.bind(moduleCode, moduleName, sDate, eDate, dateAdded));
+        session.execute(boundStatement.bind(moduleCode, moduleName, sDate, eDate, dateAdded, username));
         return true;
     }  
     

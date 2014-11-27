@@ -46,20 +46,21 @@ public class addmodule extends HttpServlet {
         String moduleName = request.getParameter("moduleName");
         String startDate = request.getParameter("startDate");
         String examDate = request.getParameter("examDate");
+        String username = request.getParameter("username");
         
 
         //below is an if statement that will check none of the fields have been left empty
-        if (moduleCode.equals("") || moduleName.equals("") || startDate.equals("") || examDate.equals("")) {
+        if (moduleCode.equals("") || moduleName.equals("") || startDate.equals("") || examDate.equals("") || username.equals("")) {
             incompleteError(request, response); // display error message
         }
 
         // this if statement prevents the user from creating an account that does not have all fields completed
-        if (!moduleCode.equals("") && !moduleName.equals("") && !startDate.equals("") && !examDate.equals("")) {
+        if (!moduleCode.equals("") && !moduleName.equals("") && !startDate.equals("") && !examDate.equals("") && !username.equals("")) {
             ModuleModel mod = new ModuleModel();
             mod.setCluster(cluster);
 
             try {
-                if (mod.addModule(moduleCode, moduleName, startDate, examDate)) {
+                if (mod.addModule(moduleCode, moduleName, startDate, examDate, username)) {
                     RequestDispatcher rd = request.getRequestDispatcher("addmodule.jsp");
                     request.setAttribute("moduleAdded", moduleCode); // display confirmation message that module was added
                     rd.forward(request, response);
