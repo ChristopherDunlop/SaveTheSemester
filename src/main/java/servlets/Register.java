@@ -29,7 +29,6 @@ public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Cluster cluster=null;
     public void init(ServletConfig config) throws ServletException {
-        // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster();
     }
 

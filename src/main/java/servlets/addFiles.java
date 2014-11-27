@@ -5,13 +5,19 @@
  */
 package servlets;
 
+import com.datastax.driver.core.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lib.CassandraHosts;
+import models.ModuleModel;
+
+import stores.ModuleFile;
 
 /**
  *
@@ -19,50 +25,58 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "addFiles", urlPatterns = {"/addFiles"})
 public class addFiles extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) 
-        {}
+    private static final long serialVersionUID = 1L;
+	Cluster cluster=null;
+        public void init(ServletConfig config) throws ServletException {
+        cluster = CassandraHosts.getCluster();
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String fileName=request.getParameter("fileName");
+        String fileType=request.getParameter("fileType");
+        String numPages=request.getParameter("numPages");
+        String username=request.getParameter("username");
+        
+         if (fileName.equals(""))
+        {
+        	error("Please enter a a File Name ", response);
+        	return;
+        }
+        else if (fileType.equals(""))
+        {
+        	error("Please enter the File Type ", response);
+            return;
+        }
+        else if (numPages.equals(""))
+        {
+        	error("Please enter the number of pages in the file ", response);
+            return;
+        }
+         
+        ModuleModel fi = new ModuleModel();
+        fi.setCluster(cluster);
+        fi.addFile(fileName, fileType, numPages, username);
+        boolean existingFile = fi.existingFile(fileID);
+        
+        if (existingFile == true)
+        {
+        	fi.addFile(fileName, fileType, numPages, username);
+        	response.sendRedirect("/SaveTheSemester");
+        }
+        else
+        {
+        	response.sendRedirect("/SaveTheSemester");
+        } 
+    }
+    
+     private void error(String fault, HttpServletResponse response) throws ServletException, IOException
+    {
+    	 PrintWriter out = null;
+    	 out = new PrintWriter(response.getOutputStream());
+    	 out.println("<h1>You have made a mistake, please try again</h1>");
+    	 out.close();
+    	 return;
     }
 
     /**

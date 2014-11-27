@@ -225,5 +225,44 @@ public class ModuleModel {
                     return true;
                 }
         }
+       
+        public boolean addFile(String fileName, String fileType, String numPages, String username ){
+        Session session = cluster.connect("savethesemester");
+        
+        UUID uuid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+        UUID fileID = uuid.randomUUID();
+        
+        if (existingFile(fileID))
+        {
+            System.out.println("The file " + fileName + " has already been uploaded!");
+            return false;
+        }
+        
+        System.out.println("File has been added!");
+        PreparedStatement ps = session.prepare("insert into modules (username, modulecode, modulename, files, startdate, examdate, dateadded) Values(?,?,?,?,?,?,?)");
+       
+        BoundStatement boundStatement = new BoundStatement(ps);
+        session.execute(boundStatement.bind(fileName, fileType, numPages, username));
+       
+        return true;
+    }
+        
+         private boolean existingFile(UUID fileID) {
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement ps = session.prepare("select fileid from file where fileid =?");
+        
+        BoundStatement boundState = new BoundStatement(ps);
+        ResultSet rs = null;
+        rs = session.execute(boundState.bind(fileID));
+        if (rs.isExhausted()) {
+            System.out.println("This file has not already been uploaded.");
+            return false;
+        } 
+        else 
+        {
+            return true;
+        }
+    }
+    
 
     }
