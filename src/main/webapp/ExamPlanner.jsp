@@ -61,10 +61,10 @@
                 final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
                 float diffInDays = (int) ((exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS);
                 
-                float numOfFiles = (float) module.getNumOfFiles();
+                float numOfFiles = (float) module.getNumIncompleteFiles();
                 float numFilesPerDay = numOfFiles / diffInDays;
                 
-                float numOfFilePages = (float) module.getNumFilePages();
+                float numOfFilePages = (float) module.getNumIncompletePages();
                 float numFilePagesPerDay = numOfFilePages / diffInDays;
         %>
                 <tr>

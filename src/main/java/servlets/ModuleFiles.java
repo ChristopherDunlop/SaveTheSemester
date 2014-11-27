@@ -93,7 +93,6 @@ public class ModuleFiles extends HttpServlet {
         
         ModuleModel mm = new ModuleModel();
         mm.setCluster(cluster);
-        ModuleFile moduleFile = mm.getModuleFile(username, moduleCode, fileID);
         mm.setFileComplete(fileID, completed, username, moduleCode);
         
         RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
