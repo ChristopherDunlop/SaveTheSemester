@@ -50,7 +50,7 @@ public class ModuleModel {
         }
         else {
             for (Row row : rs){
-                Module module = getModule(row.getString("modulecode"));
+                Module module = getModule(user, row.getString("modulecode"));
                 studentModules.add(module);
             }
         }
@@ -58,32 +58,55 @@ public class ModuleModel {
         return studentModules;
     }
     
-    public Module getModule(String moduleCode){
+    public Module getModule(String user, String moduleCode){
         Session session = cluster.connect("savethesemester");
-        PreparedStatement psModules = session.prepare("select username, modulename, files, startdate, examdate from modules where modulecode = ? ALLOW FILTERING");
+        PreparedStatement psModules = session.prepare("select modulename, startdate, examdate from modules where username = ? AND modulecode = ?");
         BoundStatement bsModules = new BoundStatement(psModules);
-        ResultSet rs = session.execute(bsModules.bind(moduleCode));
+        ResultSet rs = session.execute(bsModules.bind(user, moduleCode));
         
         Module module = null;
         
         if (rs.isExhausted()) {
-            System.out.println("No module found for module code: " + moduleCode);
+            System.out.println("No module found for " + user + " - " + moduleCode);
             return null;
         }
         else {
             for (Row row : rs){
                 module = new Module();
                 
-                module.setUsername(row.getString("username"));
+                module.setUsername(user);
                 module.setModuleCode(moduleCode);
                 module.setModuleName(row.getString("modulename"));
                 module.setStartDate(row.getDate("startdate"));
                 module.setExamDate(row.getDate("examdate"));
                 
+                Set<ModuleFile> moduleFiles = getModuleFiles(user, moduleCode);
+                
+                module.setFiles(moduleFiles);
+            }
+        }
+        
+        return module;
+    }
+    
+    public Set<ModuleFile> getModuleFiles(String user, String moduleCode){
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psModuleFiles = session.prepare("select files from modules where username = ? AND modulecode = ?");
+        BoundStatement bsModuleFiles = new BoundStatement(psModuleFiles);
+        ResultSet rs = session.execute(bsModuleFiles.bind(user, moduleCode));
+        
+        Set<ModuleFile> moduleFiles = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No files found for " + user + " - " + moduleCode);
+            return null;
+        }
+        else {
+            for (Row row : rs){
                 Set<UDTValue> files = row.getSet("files", UDTValue.class);
                 Iterator<UDTValue> iterator = files.iterator();
                 
-                Set<ModuleFile> moduleFiles = new HashSet<>();
+                moduleFiles = new HashSet<>();
 
                 while (iterator.hasNext()){
                     ModuleFile moduleFile = new ModuleFile();
@@ -105,12 +128,10 @@ public class ModuleModel {
                     
                     moduleFiles.add(moduleFile);
                 }
-                
-                module.setFiles(moduleFiles);
             }
         }
         
-        return module;
+        return moduleFiles;
     }
     
     public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate, String username) throws ParseException {         
