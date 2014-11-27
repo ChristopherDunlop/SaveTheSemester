@@ -16,13 +16,15 @@
                 <li><a href="/SaveTheSemester/index.jsp">Home</a></li>
             </ul>
         </nav>
+    <% LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn"); %>
        
             <h3>Add Files (Revision Materials)</h3>
-            <form method="POST"  action="addFiles">
+            <form method="GET"  action="addFiles/<%=lg.getUsername()%>">
                 <ul>
-                    <li>File Name: <input type="text" name="filename"></li>
-                    <li>File Type: <input type="text" name="filetype"></li>
-                    <li>Number of Pages: <input type="text" name="numpages"></li>
+                    <li>File Name: <input type="text" name="fileName"></li>
+                    <li>File Type: <input type="text" name="fileType"></li>
+                    <li>Number of Pages: <input type="text" name="numPages"></li>
+                    <li>Module Code: <input type ="text" name ="modCode"></li>
                 </ul>
              <input type="submit" value="Add File"> 
              </form>

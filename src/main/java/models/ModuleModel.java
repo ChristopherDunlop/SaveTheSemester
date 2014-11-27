@@ -12,6 +12,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.UDTValue;
+import com.datastax.driver.core.UserType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -185,26 +186,112 @@ public class ModuleModel {
         return true;
     }  
        
-        public boolean addFile(String fileName, String fileType, String numPages, String username ){
-        Session session = cluster.connect("savethesemester");
-        
-        UUID uuid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-        UUID fileID = uuid.randomUUID();
+        private boolean existingFile(String username, UUID id) {
+         Session session = cluster.connect("savethesemester");
+         PreparedStatement ps = session.prepare("select files from modules where username =?");
+         BoundStatement boundState = new BoundStatement(ps);
+         ResultSet rs = null;
+       
+        rs = session.execute(boundState.bind(username));
+        for(Row row : rs)
+         {
+            Set<UDTValue> files = row.getSet("files", UDTValue.class);
+            Iterator<UDTValue> iterator = files.iterator();
+            while (iterator.hasNext()){
+                    UDTValue file = iterator.next();
+                    UUID fileID = file.getUUID("fileid");
+                    if (fileID == id)
+                    {
+                        System.out.println("File already exists");
+                        return true;
+                }
+                    else
+                    {
+                        System.out.println ("File does not exist!");
+                        return false;
+                    }
+                    
+                 }
+         }
+
+            return false; 
+        }
+
+   public boolean addFile(String fileName, String fileType, String numPages, String username, String modulecode ){
+         Session session = cluster.connect("savethesemester");
+         
+         UUID uuid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+         UUID fileID = uuid.randomUUID();
         
         if (existingFile(fileID))
-        {
-            System.out.println("The file " + fileName + " has already been uploaded!");
-            return false;
-        }
+        if (existingFile(username,fileID))
+         {
+             System.out.println("The file " + fileName + " has already been uploaded!");
+             return false;
+         }
         
-        System.out.println("File has been added!");
-        PreparedStatement ps = session.prepare("insert into modules (username, modulecode, modulename, files, startdate, examdate, dateadded) Values(?,?,?,?,?,?,?)");
-       
+        int noPages = Integer.valueOf(numPages);
+        UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
+        UDTValue newfile = fileUDT.newValue()
+                .setUUID("fileid",fileID)
+                .setString("filetype", fileType)
+                .setInt("numpages", noPages);
+        Set <UDTValue> toadd = new HashSet<>();
+        toadd.add(newfile);
+        PreparedStatement ps = session.prepare("UPDATE modules SET files = files + ? where username = ? AND modulecode = ?");
+         System.out.println("File has been added!");
         BoundStatement boundStatement = new BoundStatement(ps);
         session.execute(boundStatement.bind(fileName, fileType, numPages, username));
        
-        return true;
-    }
+        session.execute(boundStatement.bind(toadd, username, modulecode));
+         return true;
+     }      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
     private boolean existingFile(UUID fileID) {
         Session session = cluster.connect("savethesemester");
