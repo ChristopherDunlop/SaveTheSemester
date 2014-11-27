@@ -4,9 +4,17 @@
         <servlet-name>logIn</servlet-name>
         <servlet-class>servlets.Login</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Progress</servlet-name>
+        <servlet-class>servlets.Progress</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>logIn</servlet-name>
         <url-pattern>/logIn</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Progress</servlet-name>
+        <url-pattern>/Progress</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

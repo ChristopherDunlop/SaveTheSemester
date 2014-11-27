@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 lib\CassandraHosts.class
 servlets\ExamPlanner.class
 servlets\ModuleFiles.class
@@ -16,3 +17,6 @@ stores\ModuleFile.class
 lib\Convertors.class
 servlets\addFiles.class
 stores\Student.class
+=======
+lib\Convertors.class
+>>>>>>> aca065ebae1a4fd22cdcb8d76023a8676493c077
