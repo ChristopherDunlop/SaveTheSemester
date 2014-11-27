@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import stores.Module;
 import stores.ModuleFile;
-
+import java.util.Map;
 
 /**
  *
@@ -97,28 +97,31 @@ public class ModuleModel {
         ResultSet rs = session.execute(bsModuleFiles.bind(user, moduleCode));
         
         Set<ModuleFile> moduleFiles = null;
-        
+
         if (rs.isExhausted()) {
             System.out.println("No files found for " + user + " - " + moduleCode);
             return null;
         }
-        else {
+        else {            
             for (Row row : rs){
-                Set<UDTValue> files = row.getSet("files", UDTValue.class);
-                Iterator<UDTValue> iterator = files.iterator();
+                Map<UUID, UDTValue> files = row.getMap("files", UUID.class, UDTValue.class);
+                Iterator iterator = files.entrySet().iterator();
                 
                 moduleFiles = new HashSet<>();
 
                 while (iterator.hasNext()){
                     ModuleFile moduleFile = new ModuleFile();
                     
-                    UDTValue file = iterator.next();
-                    UUID fileID = file.getUUID("fileid");
-                    String fileName = file.getString("filename");
-                    String fileType = file.getString("filetype");
-                    int numPages = file.getInt("numpages");
-                    boolean completed = file.getBool("completed");
-                    Date dateCompleted = file.getDate("datecompleted");
+                    //UDTValue file = iterator.next();
+                    Map.Entry file = (Map.Entry) iterator.next();
+                    UDTValue fileInfo = (UDTValue) file.getValue();
+                    
+                    UUID fileID = (UUID) file.getKey();             
+                    String fileName = fileInfo.getString("filename");
+                    String fileType = fileInfo.getString("filetype");
+                    int numPages = fileInfo.getInt("numpages");
+                    boolean completed = fileInfo.getBool("completed");
+                    Date dateCompleted = fileInfo.getDate("datecompleted");
                     
                     moduleFile.setFileID(fileID);
                     moduleFile.setFileName(fileName);
@@ -246,53 +249,7 @@ public class ModuleModel {
         session.execute(boundStatement.bind(toadd, username, modulecode));
          return true;
      }      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+ 
     private boolean existingFile(UUID fileID) {
         Session session = cluster.connect("savethesemester");
         PreparedStatement ps = session.prepare("select fileid from file where fileid =?");

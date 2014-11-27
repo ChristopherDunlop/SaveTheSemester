@@ -53,10 +53,28 @@
         %>      
             <td>Yes</td>
             <td><%=moduleFile.getDateCompleted()%></td>
+            <td>
+                <form method="POST">
+                    <input type="hidden" name="fileID" value="<%=moduleFile.getFileID()%>">
+                    <input type="hidden" name="username" value="<%=(String) request.getAttribute("username")%>">
+                    <input type="hidden" name="moduleCode" value="<%=(String) request.getAttribute("moduleCode")%>">
+                    <input type="hidden" name="completed" value="false">
+                    <input type="submit" value="Reset">
+                </form>
+            </td>
         <%  }
             else {
         %>  <td>No</td>    
             <td>N/A</td>
+            <td>
+                <form method="POST" action="ModuleFiles">
+                    <input type="hidden" name="fileID" value="<%=moduleFile.getFileID()%>">
+                    <input type="hidden" name="username" value="<%=(String) request.getAttribute("username")%>">
+                    <input type="hidden" name="moduleCode" value="<%=(String) request.getAttribute("moduleCode")%>">
+                    <input type="hidden" name="completed" value="true">
+                    <input type="submit" value="Completed">
+                </form>
+            </td>
         <%  }
         %>
             </tr>

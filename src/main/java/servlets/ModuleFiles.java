@@ -45,16 +45,7 @@ public class ModuleFiles extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String args[] = Convertors.SplitRequestPath(request);
         
-        ModuleModel mm = new ModuleModel();
-        mm.setCluster(cluster);
-        Set<ModuleFile> moduleFiles = mm.getModuleFiles(args[2], args[3]);
-        
-        request.setAttribute("moduleFiles", moduleFiles);
-        
-        RequestDispatcher rd = request.getRequestDispatcher("/ModuleFiles.jsp");
-        rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -69,7 +60,18 @@ public class ModuleFiles extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String args[] = Convertors.SplitRequestPath(request);
+        
+        ModuleModel mm = new ModuleModel();
+        mm.setCluster(cluster);
+        Set<ModuleFile> moduleFiles = mm.getModuleFiles(args[2], args[3]);
+        
+        request.setAttribute("moduleFiles", moduleFiles);
+        request.setAttribute("username", args[2]);
+        request.setAttribute("moduleCode", args[3]);
+        
+        RequestDispatcher rd = request.getRequestDispatcher("/ModuleFiles.jsp");
+        rd.forward(request, response);
     }
 
     /**
@@ -83,7 +85,16 @@ public class ModuleFiles extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String args[] = Convertors.SplitRequestPath(request);
+        java.util.UUID fileID = java.util.UUID.fromString(request.getParameter("fileID"));
+        boolean completed = Boolean.parseBoolean(request.getParameter("completed"));
+        
+        ModuleModel mm = new ModuleModel();
+        mm.setCluster(cluster);
+        //mm.setModuleFileCompleted(fileID, completed);
+        
+        RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+        rd.forward(request, response);
     }
 
     /**
