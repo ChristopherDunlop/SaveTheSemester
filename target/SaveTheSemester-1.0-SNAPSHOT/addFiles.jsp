@@ -16,7 +16,6 @@
                 <li><a href="/SaveTheSemester/index.jsp">Home</a></li>
             </ul>
         </nav>
-<<<<<<< HEAD
     <% LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn"); %>
        
             <h3>Add Files (Revision Materials)</h3>
@@ -26,15 +25,6 @@
                     <li>File Type: <input type="text" name="fileType"></li>
                     <li>Number of Pages: <input type="text" name="numPages"></li>
                     <li>Module Code: <input type ="text" name ="modCode"></li>
-=======
-       
-            <h3>Add Files (Revision Materials)</h3>
-            <form method="POST"  action="addFiles">
-                <ul>
-                    <li>File Name: <input type="text" name="filename"></li>
-                    <li>File Type: <input type="text" name="filetype"></li>
-                    <li>Number of Pages: <input type="text" name="numpages"></li>
->>>>>>> aca065ebae1a4fd22cdcb8d76023a8676493c077
                 </ul>
              <input type="submit" value="Add File"> 
              </form>

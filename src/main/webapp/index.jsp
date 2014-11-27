@@ -21,12 +21,14 @@
             {
     %>
     
-        <h1><a href="/SaveTheSemester/Login">Login</a></h1>
-        <h1><a href="Register.jsp">Register</a></h1>
+        
+        
         <h1><a href="/SaveTheSemester/Profile/<%=lg.getUsername()%>">Student Profile</a></h1>
+        <h1><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>">Exam Planner</a></h1>
+        <h1><a href="/SaveTheSemester/Progress/">View your Progress</a></h1>
         <h1><a href="addmodule.jsp">Add Module</a></h1>
         <h1><a href="/SaveTheSemester/addFiles.jsp">Add Files</a></h1>
-        <h1><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>">Exam Planner</a></h1>
+        
     
     <%
                        }

@@ -16,10 +16,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <    <title>Progress</title>
+        <title>Progress</title>
     </head>
     <body>
-        <h1>Exam Planner</h1>
+        <h1>Progress</h1>
         <% Set<Module> modules = (Set<Module>) request.getAttribute("modules"); 
            LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
         %>
@@ -67,7 +67,7 @@
                 <tr>
                     <td><%=module.getModuleCode()%></td>
                     <td><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>"><%=module.getModuleName()%></a></td>
-                    <td><%=(totalDays-diffInDays)/7%>"/"<%=totalDays/7%></td>
+                    <td><%=(totalDays-diffInDays)/7%>/<%=totalDays/7%></td>
                     <td><%=diffInDays%></td>
                     <td>"Percentage to be implemented"</td>
                 </tr>
