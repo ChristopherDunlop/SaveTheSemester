@@ -7,7 +7,6 @@ package servlets;
 
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +24,7 @@ import models.ModuleModel;
  *
  * @author peterbennington
  */
-@WebServlet(name = "adddeliverable", urlPatterns = {"/adddeliverable"})
+@WebServlet(name = "AddDeliverable", urlPatterns = {"/AddDeliverable"})
 public class adddeliverable extends HttpServlet {
     
     Cluster cluster = null;
@@ -36,6 +35,29 @@ public class adddeliverable extends HttpServlet {
         cluster = CassandraHosts.getCluster();
     }
     
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.sendRedirect("adddeliverable.jsp");
+    }
+
+    
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -45,20 +67,23 @@ public class adddeliverable extends HttpServlet {
         String dueDate = request.getParameter("dueDate");
         String percentageWorth = request.getParameter("percentageWorth");
         String percentageAchieved = request.getParameter("percentageAchieved");
-        double perWorth = Double.parseDouble(percentageWorth);
-        double perAchieved = Double.parseDouble(percentageAchieved);
+        
         String username = request.getParameter("username");
 
+        
         //below is an if statement that will check none of the fields have been left empty
-        if (moduleCode.equals("") || deliverableName.equals("") || dueDate.equals("") || perWorth == 0.0 || perAchieved == 0.0 || username.equals("")) {
+        if (moduleCode.equals("") || deliverableName.equals("") || dueDate.equals("") || percentageWorth.equals("") || percentageAchieved.equals("")) {
             incompleteError(request, response); // display error message
         }
 
-        // this if statement prevents the user from creating an account that does not have all fields completed
-        if (!moduleCode.equals("") && !deliverableName.equals("") && !dueDate.equals("") && perWorth != 0.0 && perAchieved != 0.0 && !username.equals("")){
+        // this if statement prevents the user from creating an account that does not have all required fields completed
+        if (!moduleCode.equals("") && !deliverableName.equals("") && !dueDate.equals("") && !percentageWorth.equals("") && !percentageAchieved.equals("") && !username.equals("")){
             ModuleModel del = new ModuleModel();
             del.setCluster(cluster);
-
+            
+            double perWorth = Double.parseDouble(percentageWorth);
+            double perAchieved = Double.parseDouble(percentageAchieved);
+            
             try {
                 if (del.addDeliverable(moduleCode, deliverableName, dueDate, perWorth, perAchieved, username)) {
                     RequestDispatcher rd = request.getRequestDispatcher("adddeliverable.jsp");
@@ -74,7 +99,7 @@ public class adddeliverable extends HttpServlet {
                 Logger.getLogger(adddeliverable.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        response.sendRedirect("/SaveTheSemester");
+        response.sendRedirect("/SaveTheSemester/index.jsp");
     }
 
     private void incompleteError(HttpServletRequest request, HttpServletResponse response)
