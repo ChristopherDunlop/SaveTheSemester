@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lib.CassandraHosts;
+import lib.Convertors;
 import models.ModuleModel;
 
 import stores.ModuleFile;
@@ -23,7 +24,7 @@ import stores.ModuleFile;
  *
  * @author Luke
  */
-@WebServlet(name = "addFiles", urlPatterns = {"/addFiles"})
+@WebServlet(name = "addFiles", urlPatterns = {"/addFiles/*"})
 public class addFiles extends HttpServlet {
     private static final long serialVersionUID = 1L;
 	Cluster cluster=null;
@@ -31,12 +32,24 @@ public class addFiles extends HttpServlet {
         cluster = CassandraHosts.getCluster();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+       protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fileName=request.getParameter("fileName");
+        
+        String args[] = Convertors.SplitRequestPath(request);
+        String user = args[2];
+        
+        System.out.println(user);
+        addFile(user, request, response);
+    }
+        
+        private void addFile (String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+        {
+         String fileName=request.getParameter("fileName");
         String fileType=request.getParameter("fileType");
         String numPages=request.getParameter("numPages");
-        String username=request.getParameter("username");
+        String username=user;
+        String modulecode=request.getParameter("modCode");
+        System.out.println ("file info" + fileName + fileType + numPages+ username + modulecode);
         
          if (fileName.equals(""))
         {
@@ -56,19 +69,11 @@ public class addFiles extends HttpServlet {
          
         ModuleModel fi = new ModuleModel();
         fi.setCluster(cluster);
-        fi.addFile(fileName, fileType, numPages, username);
-        boolean existingFile = fi.existingFile(fileID);
         
-        if (existingFile == true)
-        {
-        	fi.addFile(fileName, fileType, numPages, username);
-        	response.sendRedirect("/SaveTheSemester");
-        }
-        else
-        {
-        	response.sendRedirect("/SaveTheSemester");
-        } 
-    }
+        
+    }   
+            
+   
     
      private void error(String fault, HttpServletResponse response) throws ServletException, IOException
     {

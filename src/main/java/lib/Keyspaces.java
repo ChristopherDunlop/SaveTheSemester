@@ -27,7 +27,6 @@ public static void SetUpKeySpaces(Cluster c) {
             String createKeyspace ="CREATE KEYSPACE IF NOT EXISTS savethesemester WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
 
             String createFileType = "CREATE TYPE IF NOT EXISTS savethesemester.file("
-                    + " FileID UUID,"
                     + " FileName text,"
                     + " FileType text,"
                     + " NumPages int,"
@@ -41,10 +40,10 @@ public static void SetUpKeySpaces(Cluster c) {
                     + "	ModuleName text,"
                     + "	StartDate timestamp,"
                     + "	ExamDate timestamp,"
-                    + "	Files set<frozen<file>>,"
+                    + "	Files map<UUID, frozen<file>>,"
                     + "	DateAdded timestamp,"
                     + "	PRIMARY KEY (Username, ModuleCode)"
-                    + "	)";
+                    + ")";
 
             String createStudentsTable = "CREATE TABLE IF NOT EXISTS savethesemester.students("
                     + " Username text PRIMARY KEY,"
