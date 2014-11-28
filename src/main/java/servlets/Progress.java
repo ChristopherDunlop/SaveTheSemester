@@ -80,19 +80,21 @@ public class Progress extends HttpServlet {
             while (miterator.hasNext()){
                 Module module = miterator.next();
                 Set<Deliverable> deliverables = mm.getDeliverables(username,module.getModuleCode());
-                Iterator<Deliverable> diterator = deliverables.iterator();
-                double finalGradePercentage = 0;
-                double percentageWorth = 0;
-                
-                while (diterator.hasNext()){            
-                    Deliverable deliverable = diterator.next();
-                    finalGradePercentage = finalGradePercentage + deliverable.getFinalGradePercentage();
-                    percentageWorth = percentageWorth + deliverable.getPercentageWorth();
+                if(deliverables != null){
+                    Iterator<Deliverable> diterator = deliverables.iterator();
+                    double finalGradePercentage = 0;
+                    double percentageWorth = 0;
+
+                    while (diterator.hasNext()){            
+                        Deliverable deliverable = diterator.next();
+                        finalGradePercentage = finalGradePercentage + deliverable.getFinalGradePercentage();
+                        percentageWorth = percentageWorth + deliverable.getPercentageWorth();
+                    }
+
+                    String percent = String.valueOf(Math.round(finalGradePercentage))+ "/" + String.valueOf(Math.round(percentageWorth));
+                    request.setAttribute(String.valueOf(i), percent);
+                    i++;
                 }
-                
-                String percent = String.valueOf(Math.round(finalGradePercentage))+ String.valueOf(Math.round(percentageWorth));
-                request.setAttribute(String.valueOf(i), percent);
-                i++;
             }           
             
             RequestDispatcher rd = request.getRequestDispatcher("/Progress.jsp");

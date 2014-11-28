@@ -95,9 +95,9 @@ public class ModuleModel {
         Set<Deliverable> deliverables = new HashSet();
         
         Session session = cluster.connect("savethesemester");
-        PreparedStatement psDeliverables = session.prepare("select DeliverableID from deliverables where Username = ?");
+        PreparedStatement psDeliverables = session.prepare("select deliverableid from deliverables where username = ? AND modulecode = ?");
         BoundStatement bsDeliverables = new BoundStatement(psDeliverables);
-        ResultSet rs = session.execute(bsDeliverables.bind(user));
+        ResultSet rs = session.execute(bsDeliverables.bind(user, ModuleCode));
         
         if (rs.isExhausted()) {
             System.out.println("No modules found for student: " + user);
@@ -105,7 +105,7 @@ public class ModuleModel {
         }
         else {
             for (Row row : rs){
-                Deliverable deliverable = getDeliverable(user, row.getString("ModuleCode"), row.getUUID("DeliverableID"));
+                Deliverable deliverable = getDeliverable(user, ModuleCode, row.getUUID("deliverableid"));
                 deliverables.add(deliverable);
             }
         }
@@ -115,7 +115,7 @@ public class ModuleModel {
     
     public Deliverable getDeliverable(String username, String moduleCode, UUID deliverableID) {
         Session session = cluster.connect("savethesemester");
-        PreparedStatement psDeliverables = session.prepare("select DeliverableName,DueDate,PercentageWorth,PercentageAchieved from deliverables where Username = ? AND ModuleCode = ? AND DeliverableID =?");
+        PreparedStatement psDeliverables = session.prepare("select deliverablename,duedate,percentageworth,percentageachieved from deliverables where username = ? AND modulecode = ? AND deliverableid =?");
         BoundStatement bsDeliverables = new BoundStatement(psDeliverables);
         ResultSet rs = session.execute(bsDeliverables.bind(username, moduleCode,deliverableID));
         

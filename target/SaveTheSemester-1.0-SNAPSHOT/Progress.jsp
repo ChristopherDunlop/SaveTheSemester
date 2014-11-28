@@ -41,7 +41,7 @@
                 <th>Module Name</th>
                 <th>Week</th>                
                 <th>Days until exam</th>
-                <th>Percentage Achieved</th>
+                <th>Percentage Achieved %</th>
             </tr>
             
         <%
@@ -69,7 +69,11 @@
                     <td><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>"><%=module.getModuleName()%></a></td>
                     <td><%=Math.round((totalDays-diffInDays)/7)%>/<%=Math.round(totalDays/7)%></td>
                     <td><%=diffInDays%></td>
-                    <td>request.getAttribute(String.valueOf(i))</td>
+                    <% if(request.getAttribute(String.valueOf(i)) != null){%>
+                    <td><%=request.getAttribute(String.valueOf(i))%></td>
+                    <%}else{%>
+                    <td>No Deliverables</td>
+                    <%}%>
                 </tr>
         <%
             i++;
