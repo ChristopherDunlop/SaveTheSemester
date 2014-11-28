@@ -231,7 +231,7 @@ public class ModuleModel {
     public boolean addModule(String moduleCode, String moduleName, String startDate, String examDate, String username) throws ParseException {         
         Session session = cluster.connect("savethesemester");
         // if statement checks if the modulecode has been taken, in which case display error message
-        if (moduleExists(moduleCode)) {
+        if (moduleExists(username, moduleCode)) {
             return false;
         }
         // here the 2 date strings are parsed into the date format
@@ -245,14 +245,14 @@ public class ModuleModel {
     }
     
     //this boolean method will check the if the module trying to be added already exists
-    private boolean moduleExists(String moduleCode) {
+    private boolean moduleExists(String username, String modulecode) {
     
         Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select modulecode from modules where modulecode =? ALLOW FILTERING");
+        PreparedStatement ps = session.prepare("select modulecode from modules where username =? and modulecode = ? ALLOW FILTERING");
         BoundStatement boundState = new BoundStatement(ps);
         ResultSet rs = null;
-        rs = session.execute(boundState.bind(moduleCode));
-        if (rs.isExhausted()) {
+        rs = session.execute(boundState.bind(username, modulecode));
+        if (rs.isExhausted()==true) {
             System.out.println("This module doesn't exist.");
             return false;
         } else {
