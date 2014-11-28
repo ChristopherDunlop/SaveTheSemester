@@ -95,8 +95,7 @@ public class ModuleFiles extends HttpServlet {
         mm.setCluster(cluster);
         mm.setFileComplete(fileID, completed, username, moduleCode);
         
-        RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
-        rd.forward(request, response);
+        response.sendRedirect("/SaveTheSemester");
     }
 
     /**

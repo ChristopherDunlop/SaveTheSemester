@@ -17,6 +17,7 @@ import lib.CassandraHosts;
 import models.StudentModel;
 
 import com.datastax.driver.core.Cluster;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 
 /**
@@ -30,6 +31,12 @@ public class Register extends HttpServlet {
 	Cluster cluster=null;
     public void init(ServletConfig config) throws ServletException {
         cluster = CassandraHosts.getCluster();
+    }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("/Register.jsp");
+        rd.forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
