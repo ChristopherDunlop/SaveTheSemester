@@ -69,8 +69,8 @@ public class addFiles extends HttpServlet {
          
         ModuleModel fi = new ModuleModel();
         fi.setCluster(cluster);
-        
-        
+        fi.addFile(fileName, fileType, numPages, username, modulecode);
+        response.sendRedirect("/SaveTheSemester/index.jsp");
     }   
             
    
