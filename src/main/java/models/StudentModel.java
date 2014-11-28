@@ -112,7 +112,7 @@ public class StudentModel {
         } else 
         {
         	System.out.println("Student " + username + " already exists!");
-        	return false;
+        	return true;
         }
     }
 

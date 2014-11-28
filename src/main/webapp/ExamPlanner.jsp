@@ -63,7 +63,7 @@
             </div>
         </div>
         
-        <h1>Exam Planner</h1>
+        
         <% Set<Module> modules = (Set<Module>) request.getAttribute("modules"); %>
         
         <%
@@ -77,7 +77,9 @@
             }
             else {
         %>
-            <div class="table-responsive">
+            <div class="container">
+                <h1>Exam Planner</h1>
+                <div class="table-responsive">
                 <table class="table table-hover">
             <tr>
                 <th>Module Code</th>
@@ -127,6 +129,7 @@
             }
         %>
             </table>
+            </div>
             </div>
         <% } %>
         

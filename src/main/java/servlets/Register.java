@@ -19,6 +19,8 @@ import models.StudentModel;
 import com.datastax.driver.core.Cluster;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpSession;
+import stores.LoggedIn;
 
 /**
  *
@@ -70,29 +72,35 @@ public class Register extends HttpServlet {
         
         StudentModel st = new StudentModel();
         st.setCluster(cluster);
-        st.RegisterStudent(username, password, name, surname);
-        boolean studentExists = st.existingStudent(username);
         
-        //response.sendRedirect("/SaveTheSemester");
+        boolean studentExists = st.existingStudent(username);
         
        if (studentExists == true)
         {
-        	st.RegisterStudent(username, password, name, surname);
         	response.sendRedirect("/SaveTheSemester");
         }
         else
         {
-        	response.sendRedirect("/SaveTheSemester");
+            boolean success = st.RegisterStudent(username, password, name, surname);
+            
+            if (success){
+                HttpSession session=request.getSession();
+                LoggedIn lg= new LoggedIn();
+                lg.setLoggedin();
+                lg.setUsername(username);
+
+                session.setAttribute("LoggedIn", lg);
+            }
+            
+            response.sendRedirect("/SaveTheSemester");
         }  
     }
     
     private void error(String fault, HttpServletResponse response) throws ServletException, IOException
     {
-    	 PrintWriter out = null;
-    	 out = new PrintWriter(response.getOutputStream());
+    	 PrintWriter out = new PrintWriter(response.getOutputStream());
     	 out.println("<h1>You have made a mistake, please try again</h1>");
     	 out.close();
-    	 return;
     }
 
 }

@@ -72,7 +72,8 @@
             }
             else {
         %>
-            <div class="table-responsive">
+            <div class="container">
+                <div class="table-responsive">
                 <table class="table table-hover">
                 <tr>
                     <th>File Name</th>
@@ -128,6 +129,7 @@
                 }
         %>
                 </table>
+            </div>
             </div>
         <%
             }
