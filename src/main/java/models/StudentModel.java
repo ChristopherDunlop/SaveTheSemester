@@ -144,4 +144,16 @@ public class StudentModel {
         }
         return student;
     }       
+   
+public boolean editProfile(String username, String firstname, String lastname)
+{
+    Session session = cluster.connect("savethesemester");
+    PreparedStatement ps = session.prepare("UPDATE students SET firstname = ?, lastname = ? WHERE username = ?");
+    BoundStatement bs = new BoundStatement(ps);
+    session.execute(bs.bind(firstname, lastname, username));
+    return true;
+}
+
+
+
 }
