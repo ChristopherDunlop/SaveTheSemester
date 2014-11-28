@@ -21,8 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
-import stores.Module;
-import stores.ModuleFile;
+import stores.*;
 import java.util.Map;
 import lib.Convertors;
 
@@ -90,6 +89,56 @@ public class ModuleModel {
         }
         
         return module;
+    }
+    
+        public Set<Deliverable> getDeliverables(String user, String ModuleCode){
+        Set<Deliverable> deliverables = new HashSet();
+        
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psDeliverables = session.prepare("select deliverableid from deliverables where username = ? AND modulecode = ?");
+        BoundStatement bsDeliverables = new BoundStatement(psDeliverables);
+        ResultSet rs = session.execute(bsDeliverables.bind(user, ModuleCode));
+        
+        if (rs.isExhausted()) {
+            System.out.println("No modules found for student: " + user);
+            return null;
+        }
+        else {
+            for (Row row : rs){
+                Deliverable deliverable = getDeliverable(user, ModuleCode, row.getUUID("deliverableid"));
+                deliverables.add(deliverable);
+            }
+        }
+        
+        return deliverables;
+    }
+    
+    public Deliverable getDeliverable(String username, String moduleCode, UUID deliverableID) {
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psDeliverables = session.prepare("select deliverablename,duedate,percentageworth,percentageachieved from deliverables where username = ? AND modulecode = ? AND deliverableid =?");
+        BoundStatement bsDeliverables = new BoundStatement(psDeliverables);
+        ResultSet rs = session.execute(bsDeliverables.bind(username, moduleCode,deliverableID));
+        
+        Deliverable deliverable = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No deliverable found for " + username + " - " + moduleCode + " - " + deliverableID);
+            return null;
+        }
+        else {
+            for (Row row : rs){
+                deliverable = new Deliverable();
+                
+                deliverable.setUsername(username);
+                deliverable.setModuleCode(moduleCode);
+                deliverable.setDeliverableName(row.getString("deliverablename"));
+                deliverable.setDueDate(row.getDate("duedate"));
+                deliverable.setPercentageWorth(row.getDouble("percentageWorth"));
+                deliverable.setPercentageAchieved(row.getDouble("percentageAchieved"));
+            }
+        }
+        
+        return deliverable;
     }
     
     public Set<ModuleFile> getModuleFiles(String user, String moduleCode){
@@ -233,14 +282,18 @@ public class ModuleModel {
         
 
     public boolean addFile(String fileName, String fileType, String numPages, String username, String modulecode ){
-          Session session = cluster.connect("savethesemester");
-          
-
+        Session session = cluster.connect("savethesemester");
         Convertors convertor = new Convertors();
-       java.util.UUID fileID = convertor.getTimeUUID();
-         
-
-       int noPages = Integer.valueOf(numPages);
+        java.util.UUID fileID = convertor.getTimeUUID();
+        
+        
+        if (moduleNotAdd(modulecode, username)){
+        System.out.println("please add module");
+        return false;
+        }
+        else 
+        {
+        int noPages = Integer.valueOf(numPages);
          UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
          UDTValue newfile = fileUDT.newValue()
 
@@ -253,27 +306,31 @@ public class ModuleModel {
 
         Map<UUID, UDTValue> file = new HashMap();
         file.put(fileID, newfile);
-        PreparedStatement ps = session.prepare("UPDATE modules SET files = files + ? where username = ? AND modulecode = ?");
+        PreparedStatement pst = session.prepare("UPDATE modules SET files = files + ? where username = ? AND modulecode = ?");
         System.out.println("File has been added!");
-        BoundStatement boundStatement = new BoundStatement(ps);
+        BoundStatement boundStatement = new BoundStatement(pst);
         session.execute(boundStatement.bind(file, username, modulecode));
          return true;
-     }  
- 
-    private boolean existingFile(UUID fileID) {
-        Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select fileid from file where fileid =?");
-        
-        BoundStatement boundState = new BoundStatement(ps);
-        ResultSet rs = null;
-        rs = session.execute(boundState.bind(fileID));
-        if (rs.isExhausted()) {
-            System.out.println("This file has not already been uploaded.");
-            return false;
-        } 
-        else 
-        {
-            return true;
         }
-    }
-}
+     }  
+    
+     public boolean moduleNotAdd(String modulecode, String username)
+     {
+         Session session = cluster.connect("savethesemester"); 
+         PreparedStatement ps = session.prepare("select modulecode, username from modules where modulecode =? AND username = ? ALLOW FILTERING");
+         BoundStatement boundState = new BoundStatement(ps);
+         ResultSet rs = session.execute(boundState.bind(modulecode, username));
+         if(rs.isExhausted() == true)
+         {
+             System.out.println("result set is empty");
+             return true; 
+         }
+         else
+         {
+             System.out.println(rs.toString());
+             return false;
+         }
+        
+     }   
+ }
+
