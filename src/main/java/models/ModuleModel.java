@@ -282,14 +282,18 @@ public class ModuleModel {
         
 
     public boolean addFile(String fileName, String fileType, String numPages, String username, String modulecode ){
-          Session session = cluster.connect("savethesemester");
-          
-
+        Session session = cluster.connect("savethesemester");
         Convertors convertor = new Convertors();
-       java.util.UUID fileID = convertor.getTimeUUID();
-         
-
-       int noPages = Integer.valueOf(numPages);
+        java.util.UUID fileID = convertor.getTimeUUID();
+        
+        
+        if (moduleNotAdd(modulecode, username)){
+        System.out.println("please add module");
+        return false;
+        }
+        else 
+        {
+        int noPages = Integer.valueOf(numPages);
          UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
          UDTValue newfile = fileUDT.newValue()
 
@@ -302,27 +306,31 @@ public class ModuleModel {
 
         Map<UUID, UDTValue> file = new HashMap();
         file.put(fileID, newfile);
-        PreparedStatement ps = session.prepare("UPDATE modules SET files = files + ? where username = ? AND modulecode = ?");
+        PreparedStatement pst = session.prepare("UPDATE modules SET files = files + ? where username = ? AND modulecode = ?");
         System.out.println("File has been added!");
-        BoundStatement boundStatement = new BoundStatement(ps);
+        BoundStatement boundStatement = new BoundStatement(pst);
         session.execute(boundStatement.bind(file, username, modulecode));
          return true;
-     }  
- 
-    private boolean existingFile(UUID fileID) {
-        Session session = cluster.connect("savethesemester");
-        PreparedStatement ps = session.prepare("select fileid from file where fileid =?");
-        
-        BoundStatement boundState = new BoundStatement(ps);
-        ResultSet rs = null;
-        rs = session.execute(boundState.bind(fileID));
-        if (rs.isExhausted()) {
-            System.out.println("This file has not already been uploaded.");
-            return false;
-        } 
-        else 
-        {
-            return true;
         }
-    }
-}
+     }  
+    
+     public boolean moduleNotAdd(String modulecode, String username)
+     {
+         Session session = cluster.connect("savethesemester"); 
+         PreparedStatement ps = session.prepare("select modulecode, username from modules where modulecode =? AND username = ? ALLOW FILTERING");
+         BoundStatement boundState = new BoundStatement(ps);
+         ResultSet rs = session.execute(boundState.bind(modulecode, username));
+         if(rs.isExhausted() == true)
+         {
+             System.out.println("result set is empty");
+             return true; 
+         }
+         else
+         {
+             System.out.println(rs.toString());
+             return false;
+         }
+        
+     }   
+ }
+
