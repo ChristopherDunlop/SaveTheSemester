@@ -16,6 +16,7 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import java.security.Timestamp;
 import java.util.Date;
 
 
@@ -121,7 +122,7 @@ public class StudentModel {
        Session session = cluster.connect("savethesemester");
        
        ResultSet rs;
-       PreparedStatement ps = session.prepare("select username, firstname, lastname, university, course, bio from students where username = ?");
+       PreparedStatement ps = session.prepare("select username, firstname, lastname, university, course, dateadded , bio from students where username = ?");
        rs = null;
        BoundStatement boundStatement = new BoundStatement(ps);
        rs = session.execute(boundStatement.bind(user));
@@ -138,14 +139,15 @@ public class StudentModel {
                 String university = row.getString ("university");
                 String course = row.getString("course");
                 String bio = row.getString("bio");
-                
+                Date date = row.getDate("dateadded");                
                 student.setUsername(username);
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
                 student.setUni(university);
                 student.setCourse(course);
                 student.setBio(bio);
-                System.out.println("student info" + username + firstName + lastName + university + course + bio);
+                student.setDate(date);
+                System.out.println("student info" + username + firstName + lastName + university + course + bio + date);
             }
         }
         return student;

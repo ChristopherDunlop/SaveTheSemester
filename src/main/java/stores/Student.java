@@ -5,6 +5,10 @@
  */
 package stores;
 
+import static com.datastax.driver.core.DataType.timestamp;
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -16,8 +20,19 @@ public class Student {
     String firstName = null;
     String lastName = null;
     String uni = null;
+    String bio =null;
     String course = null;
+    Date date = null;
 
+    public Date getDate() {
+        return date;
+    }
+
+    public Date setDate(Date date) {
+        this.date = date;
+        return null;
+    }
+    
     public String getUni() {
         return uni;
     }
@@ -41,7 +56,7 @@ public class Student {
     public void setBio(String bio) {
         this.bio = bio;
     }
-    String bio =null;
+   
 
     public String getUsername() {
         return username;

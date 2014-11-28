@@ -3,6 +3,7 @@
     Created on : 25-Nov-2014, 17:27:05
     Author     : Shaun Smith
 --%>
+<%@page import="java.util.Date"%>
 <%@page import="stores.LoggedIn"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="stores.Module"%>
@@ -38,10 +39,12 @@
                  String university = studentProfile.getUni();
                  String course = studentProfile.getCourse();
                  String bio = studentProfile.getBio();
+                 Date date = studentProfile.getDate();
         %>
             <h1>Profile of: <%=username%></h1>
             <p>First Name: <%=firstname%></p>
             <p>Last Name: <%=lastname%></p>
+            <p>Date joined:<%=date%></p>
         <% 
             if (studentProfile.getUni() == null)
             {
