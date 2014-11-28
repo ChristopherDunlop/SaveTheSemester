@@ -90,10 +90,13 @@ public class editProfile extends HttpServlet {
         String username = request.getParameter("username");
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
+        String university = request.getParameter("uni");
+        String course = request.getParameter("course");
+        String bio = request.getParameter("bio");
         
         StudentModel st = new StudentModel();
         st.setCluster(cluster);
-        st.editProfile(username, firstname, lastname);
+        st.editProfile(username, firstname, lastname, university, course, bio);
     
         response.sendRedirect("/SaveTheSemester/Profile/"+username);
     }

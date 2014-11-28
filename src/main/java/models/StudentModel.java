@@ -121,7 +121,7 @@ public class StudentModel {
        Session session = cluster.connect("savethesemester");
        
        ResultSet rs;
-       PreparedStatement ps = session.prepare("select username, firstname, lastname from students where username = ?");
+       PreparedStatement ps = session.prepare("select username, firstname, lastname, university, course, bio from students where username = ?");
        rs = null;
        BoundStatement boundStatement = new BoundStatement(ps);
        rs = session.execute(boundStatement.bind(user));
@@ -135,25 +135,28 @@ public class StudentModel {
                 String username = row.getString("username");
                 String firstName = row.getString ("firstname");
                 String lastName = row.getString ("lastname");
+                String university = row.getString ("university");
+                String course = row.getString("course");
+                String bio = row.getString("bio");
                 
                 student.setUsername(username);
                 student.setFirstName(firstName);
                 student.setLastName(lastName);
-                System.out.println("student info" + username + firstName + lastName);
+                student.setUni(university);
+                student.setCourse(course);
+                student.setBio(bio);
+                System.out.println("student info" + username + firstName + lastName + university + course + bio);
             }
         }
         return student;
     }       
    
-public boolean editProfile(String username, String firstname, String lastname)
+public boolean editProfile(String username, String firstname, String lastname, String uni, String course, String bio)
 {
     Session session = cluster.connect("savethesemester");
-    PreparedStatement ps = session.prepare("UPDATE students SET firstname = ?, lastname = ? WHERE username = ?");
+    PreparedStatement ps = session.prepare("UPDATE students SET firstname = ?, lastname = ?, university = ?, course = ?, bio = ? WHERE username = ?");
     BoundStatement bs = new BoundStatement(ps);
-    session.execute(bs.bind(firstname, lastname, username));
+    session.execute(bs.bind(firstname, lastname, uni, course, bio, username));
     return true;
 }
-
-
-
 }

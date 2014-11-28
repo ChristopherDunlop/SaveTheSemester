@@ -50,6 +50,9 @@ public static void SetUpKeySpaces(Cluster c) {
                     + " Password varchar,"
                     + " FirstName text,"
                     + " LastName text,"
+                    + " Bio text,"
+                    + " University text,"
+                    + " Course text,"
                     + " DateAdded timestamp"
                     + ")";
 

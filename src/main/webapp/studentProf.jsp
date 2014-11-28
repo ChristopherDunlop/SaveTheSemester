@@ -35,12 +35,49 @@
                  String username = studentProfile.getUsername();
                  String firstname = studentProfile.getFirstName();
                  String lastname = studentProfile.getLastName();
+                 String university = studentProfile.getUni();
+                 String course = studentProfile.getCourse();
+                 String bio = studentProfile.getBio();
         %>
             <h1>Profile of: <%=username%></h1>
             <p>First Name: <%=firstname%></p>
             <p>Last Name: <%=lastname%></p>
+        <% 
+            if (studentProfile.getUni() == null)
+            {
+        %>    
+        <p>University:            </p>
         <%    
-             }    
+            }
+        else{
+        %>        
+        <p>University: <%=university%></p>
+        <% }  
+            if(studentProfile.getCourse() == null)
+            {
+         %>
+         <p>Course:     </p>
+         <% 
+            }
+         else{   
+         %>
+        <p>Course:<%=course%></p>
+        <%  
+            }    
+        %>
+        <% 
+        if(studentProfile.getBio()== null )
+        {
+        %>    
+        <p>Bio:     </p>
+        <%
+        }
+        else
+        {
+        %> 
+        <p>Bio:<%=bio%></p>
+        <%    
+        }    
             if (modules == null)
             {
         %>
@@ -73,6 +110,7 @@
             <%
              }
                  }
+             }
             %>
              </table>
         

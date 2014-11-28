@@ -31,6 +31,9 @@
                     <li>User Name <input type="text" name="username" value="<%=student.getUsername()%>" readonly></li>
                     <li>First Name <input type="text" name="firstname" value="<%=student.getFirstName()%>"></li>
                     <li>Last Name <input type="text" name="lastname" value="<%=student.getLastName()%>"></li>
+                    <li>University <input type="text" name="uni" value="<%=student.getUni()%>"></li>
+                    <li>Course <input type="text" name="course" value="<%=student.getCourse()%>"></li>
+                    <li>Bio <input type="text" name="bio" value="<%=student.getBio()%>"></li>
                 </ul>
                 <br/>
                 <input type="submit" value="edit"> 
@@ -39,12 +42,5 @@
         <%
           }
         %>
-        
-        
-        
-        
-        
-        
-        
     </body>
 </html>
