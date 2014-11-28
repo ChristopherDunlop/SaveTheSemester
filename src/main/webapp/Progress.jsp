@@ -46,7 +46,7 @@
             
         <%
             Iterator<Module> iterator = modules.iterator();
-
+            int i = 0;
             while (iterator.hasNext()){
                 Module module = iterator.next();
                 
@@ -67,11 +67,12 @@
                 <tr>
                     <td><%=module.getModuleCode()%></td>
                     <td><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>"><%=module.getModuleName()%></a></td>
-                    <td><%=(totalDays-diffInDays)/7%>/<%=totalDays/7%></td>
+                    <td><%=Math.round((totalDays-diffInDays)/7)%>/<%=Math.round(totalDays/7)%></td>
                     <td><%=diffInDays%></td>
-                    <td>"Percentage to be implemented"</td>
+                    <td>request.getAttribute(String.valueOf(i))</td>
                 </tr>
         <%
+            i++;
             }
         %>
             </table>

@@ -21,8 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
-import stores.Module;
-import stores.ModuleFile;
+import stores.*;
 import java.util.Map;
 import lib.Convertors;
 
@@ -90,6 +89,56 @@ public class ModuleModel {
         }
         
         return module;
+    }
+    
+        public Set<Deliverable> getDeliverables(String user, String ModuleCode){
+        Set<Deliverable> deliverables = new HashSet();
+        
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psDeliverables = session.prepare("select DeliverableID from deliverables where Username = ?");
+        BoundStatement bsDeliverables = new BoundStatement(psDeliverables);
+        ResultSet rs = session.execute(bsDeliverables.bind(user));
+        
+        if (rs.isExhausted()) {
+            System.out.println("No modules found for student: " + user);
+            return null;
+        }
+        else {
+            for (Row row : rs){
+                Deliverable deliverable = getDeliverable(user, row.getString("ModuleCode"), row.getUUID("DeliverableID"));
+                deliverables.add(deliverable);
+            }
+        }
+        
+        return deliverables;
+    }
+    
+    public Deliverable getDeliverable(String username, String moduleCode, UUID deliverableID) {
+        Session session = cluster.connect("savethesemester");
+        PreparedStatement psDeliverables = session.prepare("select DeliverableName,DueDate,PercentageWorth,PercentageAchieved from deliverables where Username = ? AND ModuleCode = ? AND DeliverableID =?");
+        BoundStatement bsDeliverables = new BoundStatement(psDeliverables);
+        ResultSet rs = session.execute(bsDeliverables.bind(username, moduleCode,deliverableID));
+        
+        Deliverable deliverable = null;
+        
+        if (rs.isExhausted()) {
+            System.out.println("No deliverable found for " + username + " - " + moduleCode + " - " + deliverableID);
+            return null;
+        }
+        else {
+            for (Row row : rs){
+                deliverable = new Deliverable();
+                
+                deliverable.setUsername(username);
+                deliverable.setModuleCode(moduleCode);
+                deliverable.setDeliverableName(row.getString("deliverablename"));
+                deliverable.setDueDate(row.getDate("duedate"));
+                deliverable.setPercentageWorth(row.getDouble("percentageWorth"));
+                deliverable.setPercentageAchieved(row.getDouble("percentageAchieved"));
+            }
+        }
+        
+        return deliverable;
     }
     
     public Set<ModuleFile> getModuleFiles(String user, String moduleCode){

@@ -59,19 +59,19 @@
                 String examDate = formatter.format(exam.getTime());
                 
                 final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-                float diffInDays = (int) ((exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS);
+                float diffInDays = (exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS;
                 
-                float numOfFiles = (float) module.getNumIncompleteFiles();
-                float numFilesPerDay = numOfFiles / diffInDays;
+                int numOfFiles = module.getNumIncompleteFiles();
+                float numFilesPerDay = (float) numOfFiles / diffInDays;
                 
-                float numOfFilePages = (float) module.getNumIncompletePages();
-                float numFilePagesPerDay = numOfFilePages / diffInDays;
+                int numOfFilePages = module.getNumIncompletePages();
+                float numFilePagesPerDay = (float) numOfFilePages / diffInDays;
         %>
                 <tr>
                     <td><%=module.getModuleCode()%></td>
                     <td><%=module.getModuleName()%></td>
                     <td><%=examDate%></td>
-                    <td><%=diffInDays%></td>
+                    <td><%=(int) diffInDays%></td>
                     <td><%=numOfFiles%></td>
                     <td><%=String.format("%.2f", numFilesPerDay)%></td>
                     <td><%=numOfFilePages%></td>
