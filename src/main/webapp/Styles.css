@@ -20,7 +20,7 @@ and open the template in the editor.
 }
 
 .jumbotron {
-    background-image:url("http://www.oxygen.ie/wp-content/uploads/2014/04/stress-exam-study.jpg");
+    background-image:url('stress-exam-study.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

@@ -214,13 +214,24 @@ public class ModuleModel {
         ModuleFile moduleFile = getModuleFile(username, moduleCode, fileID);
         
         UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
-        Date date = new Date();
-        UDTValue file = fileUDT.newValue()
-                .setString("filename", moduleFile.getFileName())
-                .setString("filetype", moduleFile.getFileType())
-                .setInt("numpages", moduleFile.getNumPages())
-                .setBool("completed", completed)
-                .setDate("datecompleted", date);
+        
+        UDTValue file;
+        if (completed){
+            Date date = new Date();
+            file = fileUDT.newValue()
+                    .setString("filename", moduleFile.getFileName())
+                    .setString("filetype", moduleFile.getFileType())
+                    .setInt("numpages", moduleFile.getNumPages())
+                    .setBool("completed", completed)
+                    .setDate("datecompleted", date);
+        }
+        else {
+            file = fileUDT.newValue()
+                    .setString("filename", moduleFile.getFileName())
+                    .setString("filetype", moduleFile.getFileType())
+                    .setInt("numpages", moduleFile.getNumPages())
+                    .setBool("completed", completed);
+        }
         
         Session session = cluster.connect("savethesemester");
         PreparedStatement ps = session.prepare("update modules set files[?] = ? where username = ? and modulecode = ?");
