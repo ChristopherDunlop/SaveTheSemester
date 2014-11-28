@@ -73,29 +73,36 @@ public class Progress extends HttpServlet {
             ModuleModel mm = new ModuleModel();
             mm.setCluster(cluster);
             Set<Module> modules = mm.getStudentModules(username);
-            request.setAttribute("modules", modules);
-            Iterator<Module> miterator = modules.iterator();
-            int i = 0;
             
-            while (miterator.hasNext()){
-                Module module = miterator.next();
-                Set<Deliverable> deliverables = mm.getDeliverables(username,module.getModuleCode());
-                if(deliverables != null){
-                    Iterator<Deliverable> diterator = deliverables.iterator();
-                    double finalGradePercentage = 0;
-                    double percentageWorth = 0;
+            if (modules == null){
+                RequestDispatcher rd = request.getRequestDispatcher("/Progress.jsp");
+                rd.forward(request, response);
+            }
+            else {
+                request.setAttribute("modules", modules);
+                Iterator<Module> miterator = modules.iterator();
+                int i = 0;
 
-                    while (diterator.hasNext()){            
-                        Deliverable deliverable = diterator.next();
-                        finalGradePercentage = finalGradePercentage + deliverable.getFinalGradePercentage();
-                        percentageWorth = percentageWorth + deliverable.getPercentageWorth();
+                while (miterator.hasNext()){
+                    Module module = miterator.next();
+                    Set<Deliverable> deliverables = mm.getDeliverables(username,module.getModuleCode());
+                    if(deliverables != null){
+                        Iterator<Deliverable> diterator = deliverables.iterator();
+                        double finalGradePercentage = 0;
+                        double percentageWorth = 0;
+
+                        while (diterator.hasNext()){            
+                            Deliverable deliverable = diterator.next();
+                            finalGradePercentage = finalGradePercentage + deliverable.getFinalGradePercentage();
+                            percentageWorth = percentageWorth + deliverable.getPercentageWorth();
+                        }
+
+                        String percent = String.valueOf(Math.round(finalGradePercentage))+ "/" + String.valueOf(Math.round(percentageWorth));
+                        request.setAttribute(String.valueOf(i), percent);
+                        i++;
                     }
-
-                    String percent = String.valueOf(Math.round(finalGradePercentage))+ "/" + String.valueOf(Math.round(percentageWorth));
-                    request.setAttribute(String.valueOf(i), percent);
-                    i++;
                 }
-            }           
+            }
             
             RequestDispatcher rd = request.getRequestDispatcher("/Progress.jsp");
             rd.forward(request, response);
