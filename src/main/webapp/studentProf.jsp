@@ -3,7 +3,7 @@
     Created on : 25-Nov-2014, 17:27:05
     Author     : Shaun Smith
 --%>
-
+<%@page import="stores.LoggedIn"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="stores.Module"%>
 <%@page import="models.ModuleModel"%>
@@ -20,13 +20,14 @@
         <h1>Study Planner Profile:</h1>
         
        <% 
-             Student studentProfile = (Student) request.getAttribute("StudentProfile");
+           LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");  
+           Student studentProfile = (Student) request.getAttribute("StudentProfile");
              Set<Module> modules = (Set<Module>) request.getAttribute("modules");
              if (studentProfile == null)
              {
         %>
         <p>No Profile Found</p>
-        <a href="/savethesemester.index.jsp">Home</a>
+        <a href="/savethesemester/index.jsp">Home</a>
         <%   }
         
              else
@@ -34,16 +35,24 @@
                  String username = studentProfile.getUsername();
                  String firstname = studentProfile.getFirstName();
                  String lastname = studentProfile.getLastName();
-                 
-                 Iterator<Module> iterator = modules.iterator();
-                 String mC= "";
-                 String mN= "";
-                 
-             
-             %>
+        %>
             <h1>Profile of: <%=username%></h1>
             <p>First Name: <%=firstname%></p>
             <p>Last Name: <%=lastname%></p>
+        <%    
+             }    
+            if (modules == null)
+            {
+        %>
+        <p>No modules found </p>
+        <%  }
+            else
+            {
+                Iterator<Module> iterator = modules.iterator();
+                String mC= "";
+                String mN= "";
+            
+        %>
             <table>
             <tr>
             <th>Module Code</th>
@@ -63,11 +72,12 @@
         
             <%
              }
+                 }
             %>
              </table>
-        <%
-             }
-        %>
-        <a href="/savethesemester.index.jsp">Home</a>
+        
+        <a href="/SaveTheSemester/editProfile/<%=lg.getUsername()%>">Edit Profile</a>
+        <a href="/SaveTheSemester/index.jsp">Home</a>
     </body>
 </html>
+

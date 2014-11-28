@@ -16,6 +16,7 @@ import com.datastax.driver.core.UserType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import stores.Module;
 import stores.ModuleFile;
 import java.util.Map;
+import lib.Convertors;
 
 /**
  *
@@ -216,8 +218,8 @@ public class ModuleModel {
     public boolean addDeliverable(String moduleCode, String deliverableName, String dueDate, double perWorth, double perAchieved, String username) throws ParseException {
         Session session = cluster.connect("savethesemester");    
 
-        UUID uuid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-        UUID deliverableID = uuid.randomUUID();
+        Convertors convertor = new Convertors();
+        java.util.UUID deliverableID = convertor.getTimeUUID();
  
         // here the 2 date strings are parsed into the date format
         Date dDate = new SimpleDateFormat("yyyy-MM-dd").parse(dueDate);
@@ -228,66 +230,35 @@ public class ModuleModel {
         return true;
     }  
        
-        private boolean existingFile(String username, UUID id) {
-         Session session = cluster.connect("savethesemester");
-         PreparedStatement ps = session.prepare("select files from modules where username =?");
-         BoundStatement boundState = new BoundStatement(ps);
-         ResultSet rs = null;
-       
-        rs = session.execute(boundState.bind(username));
-        for(Row row : rs)
-         {
-            Set<UDTValue> files = row.getSet("files", UDTValue.class);
-            Iterator<UDTValue> iterator = files.iterator();
-            while (iterator.hasNext()){
-                    UDTValue file = iterator.next();
-                    UUID fileID = file.getUUID("fileid");
-                    if (fileID == id)
-                    {
-                        System.out.println("File already exists");
-                        return true;
-                }
-                    else
-                    {
-                        System.out.println ("File does not exist!");
-                        return false;
-                    }
-                    
-                 }
-         }
+        
 
-            return false; 
-        }
+    public boolean addFile(String fileName, String fileType, String numPages, String username, String modulecode ){
+          Session session = cluster.connect("savethesemester");
+          
 
-   public boolean addFile(String fileName, String fileType, String numPages, String username, String modulecode ){
-         Session session = cluster.connect("savethesemester");
+        Convertors convertor = new Convertors();
+       java.util.UUID fileID = convertor.getTimeUUID();
          
-         UUID uuid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-         UUID fileID = uuid.randomUUID();
-        
-        if (existingFile(fileID))
-        if (existingFile(username,fileID))
-         {
-             System.out.println("The file " + fileName + " has already been uploaded!");
-             return false;
-         }
-        
-        int noPages = Integer.valueOf(numPages);
-        UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
-        UDTValue newfile = fileUDT.newValue()
-                .setUUID("fileid",fileID)
-                .setString("filetype", fileType)
-                .setInt("numpages", noPages);
-        Set <UDTValue> toadd = new HashSet<>();
-        toadd.add(newfile);
+
+       int noPages = Integer.valueOf(numPages);
+         UserType fileUDT = cluster.getMetadata().getKeyspace("savethesemester").getUserType("file");
+         UDTValue newfile = fileUDT.newValue()
+
+                .setString("filename", fileName)
+                 .setString("filetype", fileType)
+
+                .setInt("numpages", noPages)
+                .setBool("completed", false);
+         
+
+        Map<UUID, UDTValue> file = new HashMap();
+        file.put(fileID, newfile);
         PreparedStatement ps = session.prepare("UPDATE modules SET files = files + ? where username = ? AND modulecode = ?");
-         System.out.println("File has been added!");
+        System.out.println("File has been added!");
         BoundStatement boundStatement = new BoundStatement(ps);
-        session.execute(boundStatement.bind(fileName, fileType, numPages, username));
-       
-        session.execute(boundStatement.bind(toadd, username, modulecode));
+        session.execute(boundStatement.bind(file, username, modulecode));
          return true;
-     }      
+     }  
  
     private boolean existingFile(UUID fileID) {
         Session session = cluster.connect("savethesemester");
