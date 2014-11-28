@@ -1,4 +1,5 @@
 lib\CassandraHosts.class
+stores\Deliverable.class
 servlets\ExamPlanner.class
 servlets\ModuleFiles.class
 models\StudentModel.class
@@ -12,6 +13,7 @@ stores\Module.class
 lib\AeSimpleSHA1.class
 stores\LoggedIn.class
 servlets\adddeliverable.class
+servlets\editProfile.class
 servlets\Register.class
 stores\ModuleFile.class
 lib\Convertors.class
