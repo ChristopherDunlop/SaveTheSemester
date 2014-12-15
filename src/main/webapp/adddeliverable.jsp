@@ -92,7 +92,7 @@
                 <input type="number" step="any" min="0" max="100" name="percentageWorth" class="form-control" placeholder="00.00" required>        
                 
                 <label for="percentageAchieved" >Percentage Achieved</label>
-                <input type="number" step="any" min="0" max="100" name="percentageAcheived" class="form-control" placeholder="00.00" required> 
+                <input type="number" step="any" min="0" max="100" name="percentageAchieved" class="form-control" placeholder="00.00" required> 
            
                 <br/>
                 <input type="hidden" value="<%=lg.getUsername()%>" name="username">

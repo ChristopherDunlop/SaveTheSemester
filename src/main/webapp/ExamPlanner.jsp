@@ -108,17 +108,20 @@
                 final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
                 float diffInDays = (exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS;
                 
-                int numOfFiles = module.getNumIncompleteFiles();
-                float numFilesPerDay = (float) numOfFiles / diffInDays;
                 
-                int numOfFilePages = module.getNumIncompletePages();
-                float numFilePagesPerDay = (float) numOfFilePages / diffInDays;
         %>
                 <tr>
                     <td><%=module.getModuleCode()%></td>
                     <td><%=module.getModuleName()%></td>
                     <td><%=examDate%></td>
-                    <td><%=(int) diffInDays%></td>
+                    <td><%=String.format("%.0f", diffInDays)%></td>
+        <%
+                float numOfFiles = (float) module.getNumIncompleteFiles();
+                float numFilesPerDay = numOfFiles / diffInDays;
+                
+                float numOfFilePages = (float) module.getNumIncompletePages();
+                float numFilePagesPerDay = (float) numOfFilePages / diffInDays;
+        %>
                     <td><%=numOfFiles%></td>
                     <td><%=String.format("%.2f", numFilesPerDay)%></td>
                     <td><%=numOfFilePages%></td>

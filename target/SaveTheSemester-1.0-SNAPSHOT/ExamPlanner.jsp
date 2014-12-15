@@ -35,12 +35,12 @@
                     <li><a href="/SaveTheSemester/Profile/<%=lg.getUsername()%>">Student Profile</a></li>
                     <li><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>">Exam Planner</a></li>
                     <li><a href="/SaveTheSemester/Progress">View your Progress</a></li>
-                    <li><a href="/SaveTheSemester/AddModule">Add Module</a></li>
-                    <li><a href="/SaveTheSemester/AddDeliverable">Add Deliverable</a></li>
-                    <li><a href="/SaveTheSemester/addFiles.jsp">Add Files</a></li>
                 </ul>
                     
                 <ul class="nav nav-pills pull-right">
+                    <li><a href="/SaveTheSemester/AddModule">Add Module</a></li>
+                    <li><a href="/SaveTheSemester/addFiles.jsp">Add Module File</a></li>
+                    <li><a href="/SaveTheSemester/AddDeliverable">Add Deliverable</a></li>
                     <li><a href="/SaveTheSemester/logout">Logout</a></li>
                 </ul>
     <%
@@ -63,7 +63,7 @@
             </div>
         </div>
         
-        <h1>Exam Planner</h1>
+        
         <% Set<Module> modules = (Set<Module>) request.getAttribute("modules"); %>
         
         <%
@@ -77,7 +77,9 @@
             }
             else {
         %>
-            <div class="table-responsive">
+            <div class="container">
+                <h1>Exam Planner</h1>
+                <div class="table-responsive">
                 <table class="table table-hover">
             <tr>
                 <th>Module Code</th>
@@ -106,17 +108,20 @@
                 final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
                 float diffInDays = (exam.getTimeInMillis() - today.getTimeInMillis()) / DAY_IN_MILLIS;
                 
-                int numOfFiles = module.getNumIncompleteFiles();
-                float numFilesPerDay = (float) numOfFiles / diffInDays;
                 
-                int numOfFilePages = module.getNumIncompletePages();
-                float numFilePagesPerDay = (float) numOfFilePages / diffInDays;
         %>
                 <tr>
                     <td><%=module.getModuleCode()%></td>
                     <td><%=module.getModuleName()%></td>
                     <td><%=examDate%></td>
-                    <td><%=(int) diffInDays%></td>
+                    <td><%=String.format("%.0f", diffInDays)%></td>
+        <%
+                float numOfFiles = (float) module.getNumIncompleteFiles();
+                float numFilesPerDay = numOfFiles / diffInDays;
+                
+                float numOfFilePages = (float) module.getNumIncompletePages();
+                float numFilePagesPerDay = (float) numOfFilePages / diffInDays;
+        %>
                     <td><%=numOfFiles%></td>
                     <td><%=String.format("%.2f", numFilesPerDay)%></td>
                     <td><%=numOfFilePages%></td>
@@ -127,6 +132,7 @@
             }
         %>
             </table>
+            </div>
             </div>
         <% } %>
         

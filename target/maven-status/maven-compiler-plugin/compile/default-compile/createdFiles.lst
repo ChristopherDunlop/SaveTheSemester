@@ -3,6 +3,7 @@ stores\Deliverable.class
 servlets\ExamPlanner.class
 servlets\ModuleFiles.class
 models\StudentModel.class
+servlets\Logout.class
 models\ModuleModel.class
 servlets\LogIn.class
 servlets\studentProfile.class

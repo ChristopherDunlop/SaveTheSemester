@@ -75,7 +75,10 @@
             }
             else {
         %>
-            <table border="1">
+            <div class="container">
+                <h1>Progress</h1>
+                <div class="table-responsive">
+                <table class="table table-hover">
             <tr>
                 <th>Module Code</th>
                 <th>Module Name</th>
@@ -120,6 +123,14 @@
             }
         %>
             </table>
+                </div>
+            </div>
         <% } %>
+        
+        <div class="footer">
+            <div class="container">
+                <p>&COPY; Study Saviours 2014</p>
+            </div>
+        </div>
     </body>
 </html>

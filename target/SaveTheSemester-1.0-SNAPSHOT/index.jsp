@@ -29,12 +29,12 @@
                     <li><a href="/SaveTheSemester/Profile/<%=lg.getUsername()%>">Student Profile</a></li>
                     <li><a href="/SaveTheSemester/ExamPlanner/<%=lg.getUsername()%>">Exam Planner</a></li>
                     <li><a href="/SaveTheSemester/Progress">View your Progress</a></li>
-                    <li><a href="/SaveTheSemester/AddModule">Add Module</a></li>
-                    <li><a href="/SaveTheSemester/AddDeliverable">Add Deliverable</a></li>
-                    <li><a href="/SaveTheSemester/addFiles.jsp">Add Files</a></li>
                 </ul>
                     
                 <ul class="nav nav-pills pull-right">
+                    <li><a href="/SaveTheSemester/AddModule">Add Module</a></li>
+                    <li><a href="/SaveTheSemester/addFiles.jsp">Add Module File</a></li>
+                    <li><a href="/SaveTheSemester/AddDeliverable">Add Deliverable</a></li>
                     <li><a href="/SaveTheSemester/logout">Logout</a></li>
                 </ul>
     <%
